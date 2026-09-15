@@ -34,7 +34,9 @@
     <PackageProjectUrl>https://nuvyntralabs.github.io/packages/nuvyntralabs-uikit/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nuvyntralabs/NuvyntraLabs.UIKit</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>1.0.0: Full Lumina catalog — 96 NV* controls, 49 page recipes, tokens, Shell sample. CI packs; nuget.org publish stays pipeline-owned.</PackageReleaseNotes>
+    <Version>1.0.0</Version>
+    <PackageVersion>1.0.0</PackageVersion>
+    <PackageReleaseNotes>1.0.0: Full Lumina catalog — 177 NV* controls, 57 page recipes, tokens, Shell sample. CI publishes nupkg + snupkg to nuget.org and GitHub Packages.</PackageReleaseNotes>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

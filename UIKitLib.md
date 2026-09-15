@@ -1,6 +1,15 @@
 # NuvyntraLabs.UIKit — control reference
 
+[![NuGet](https://img.shields.io/nuget/v/NuvyntraLabs.UIKit.svg?label=NuGet)](https://www.nuget.org/packages/NuvyntraLabs.UIKit)
+
+- NuGet: https://www.nuget.org/packages/NuvyntraLabs.UIKit
+- GitHub: https://github.com/nuvyntralabs/NuvyntraLabs.UIKit
+- Docs: https://nuvyntralabs.github.io/packages/nuvyntralabs-uikit/
+- Catalog: [MauiEssentials](https://github.com/nuvyntralabs/MauiEssentials)
+
 Package: `NuvyntraLabs.UIKit` · Prefix: `NV` · Version: `1.0.0`
+
+Human + agent overview: [README.md](README.md). IDs: [nuvyntralabs-uikit-components.md](https://github.com/nuvyntralabs/MauiEssentials/blob/main/docs/plans/nuvyntralabs-uikit-components.md).
 
 ```xml
 xmlns:nv="http://nuvyntralabs.com/uikit"

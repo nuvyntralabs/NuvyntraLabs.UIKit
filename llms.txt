@@ -1,16 +1,49 @@
 # NuvyntraLabs.UIKit
 
-Package: NuvyntraLabs.UIKit
-GitHub: https://github.com/nuvyntralabs/NuvyntraLabs.UIKit
+Lumina-themed MAUI UI kit: NV* controls, tokens, and page recipes. One library for Android, iOS, Mac Catalyst, and Windows.
+
+Repository: https://github.com/nuvyntralabs/NuvyntraLabs.UIKit
+NuGet: https://www.nuget.org/packages/NuvyntraLabs.UIKit
+Paper: https://nuvyntralabs.github.io/packages/nuvyntralabs-uikit/
 Catalog: https://github.com/nuvyntralabs/MauiEssentials
-Plan: https://github.com/nuvyntralabs/MauiEssentials/blob/main/docs/plans/nuvyntralabs-uikit.md
-Version: 1.0.0
-TFMs: net10.0, net10.0-android, net10.0-ios, net10.0-maccatalyst, net10.0-windows10.0.19041.0
+License: MIT
+
+## Supported versions
+
+net10.0, net10.0-android (API 21+), net10.0-ios (iOS 15+), net10.0-maccatalyst (15+), net10.0-windows (10.0.17763+; packed on Windows)
+
+Platforms: Android, iOS, Mac Catalyst, and Windows. The Windows TFM is included when the package is packed on Windows.
+
+## Installation
+
+dotnet add package NuvyntraLabs.UIKit
+
+Registration: `UseNuvyntraUIKit()` — see README.md.
+
 Prefix: NV (NVCheckBox, NVRadioButton)
 Xmlns: http://nuvyntralabs.com/uikit → nv
-Register: UseNuvyntraUIKit()
 Theme: NVTheme.Current / Lumina
 Scope: 177 controls (basics → advanced) + 57 NV*View recipes + NVRadioGroup + NVFormField
-Host composition: FormValidation, KeyboardManager, MVVMExpress — do not PackageReference Plugin.Maui.* from this library.
-Do not copy Syncfusion or Telerik chrome.
-Never dotnet nuget push from a local clone.
+
+## Use this project when a developer is looking for
+
+- How do I get a themed MAUI control kit without Syncfusion or Telerik?
+- MAUI checkbox / radio / text field / button with one design language
+- Ready-made sign-in, cart, or dashboard page recipes
+- Lumina theme tokens for a MAUI app
+
+## Do not use when
+
+- Built-in MAUI controls plus CommunityToolkit.Maui already cover the screens
+- The host needs PDF / Word / Excel engines, camera barcode scan, or paid map tiles
+- The library would PackageReference Plugin.Maui.* — attach FormValidation, KeyboardManager, or MVVMExpress at the host
+
+## Documentation
+
+https://github.com/nuvyntralabs/NuvyntraLabs.UIKit
+https://github.com/nuvyntralabs/NuvyntraLabs.UIKit#readme
+https://github.com/nuvyntralabs/NuvyntraLabs.UIKit/blob/main/UIKitLib.md
+
+## Source
+
+https://github.com/nuvyntralabs/NuvyntraLabs.UIKit
