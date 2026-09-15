@@ -9,7 +9,7 @@ Lumina UI kit for .NET MAUI. Single assembly `NuvyntraLabs.UIKit`. Types use the
 - Catalog: https://github.com/nuvyntralabs/MauiEssentials
 - Plan: https://github.com/nuvyntralabs/MauiEssentials/blob/main/docs/plans/nuvyntralabs-uikit.md
 - Components: https://github.com/nuvyntralabs/MauiEssentials/blob/main/docs/plans/nuvyntralabs-uikit-components.md
-- Version: 0.1.0 (publish after all phases)
+- Version: 1.0.0 (pipeline-only nuget.org)
 
 ## When to consider this repository
 

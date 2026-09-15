@@ -6,13 +6,43 @@
        FlyoutBehavior="Flyout"
        Title="NuvyntraLabs UIKit">
 
-    <FlyoutItem Title="Theme">
+    <FlyoutItem Title="01  Theme">
         <ShellContent ContentTemplate="{DataTemplate pages:ThemePage}" Route="theme" />
     </FlyoutItem>
-    <FlyoutItem Title="Actions">
+    <FlyoutItem Title="02  Primitives">
+        <ShellContent ContentTemplate="{DataTemplate pages:PrimitivesPage}" Route="primitives" />
+    </FlyoutItem>
+    <FlyoutItem Title="03  Actions">
         <ShellContent ContentTemplate="{DataTemplate pages:ActionsPage}" Route="actions" />
     </FlyoutItem>
-    <FlyoutItem Title="Inputs">
+    <FlyoutItem Title="04  Inputs">
         <ShellContent ContentTemplate="{DataTemplate pages:InputsPage}" Route="inputs" />
+    </FlyoutItem>
+    <FlyoutItem Title="05  Basics">
+        <ShellContent ContentTemplate="{DataTemplate pages:BasicsPage}" Route="basics" />
+    </FlyoutItem>
+    <FlyoutItem Title="06  Feedback">
+        <ShellContent ContentTemplate="{DataTemplate pages:FeedbackPage}" Route="feedback" />
+    </FlyoutItem>
+    <FlyoutItem Title="07  Layout">
+        <ShellContent ContentTemplate="{DataTemplate pages:LayoutPage}" Route="layout" />
+    </FlyoutItem>
+    <FlyoutItem Title="08  Data">
+        <ShellContent ContentTemplate="{DataTemplate pages:DataPage}" Route="data" />
+    </FlyoutItem>
+    <FlyoutItem Title="09  Charts">
+        <ShellContent ContentTemplate="{DataTemplate pages:ChartsPage}" Route="charts" />
+    </FlyoutItem>
+    <FlyoutItem Title="10  Calendar">
+        <ShellContent ContentTemplate="{DataTemplate pages:CalendarPage}" Route="calendar" />
+    </FlyoutItem>
+    <FlyoutItem Title="11  Media">
+        <ShellContent ContentTemplate="{DataTemplate pages:MediaPage}" Route="media" />
+    </FlyoutItem>
+    <FlyoutItem Title="12  Advanced">
+        <ShellContent ContentTemplate="{DataTemplate pages:AdvancedPage}" Route="advanced" />
+    </FlyoutItem>
+    <FlyoutItem Title="13  Pages">
+        <ShellContent ContentTemplate="{DataTemplate pages:RecipesPage}" Route="pages" />
     </FlyoutItem>
 </Shell>

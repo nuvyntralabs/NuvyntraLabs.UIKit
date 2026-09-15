@@ -1,0 +1,177 @@
+namespace NuvyntraLabs.UIKit;
+
+public class NVEmailField : NVTextField
+{
+    public NVEmailField()
+    {
+        Label = "Email";
+        Placeholder = "you@studio.dev";
+    }
+}
+
+public class NVPhoneField : NVMaskedEntry
+{
+    public NVPhoneField()
+    {
+        Label = "Phone";
+        Mask = "+00 00000 00000";
+        Placeholder = "+91";
+    }
+}
+
+public class NVPasswordField : NVTextField
+{
+    public NVPasswordField()
+    {
+        Label = "Password";
+        IsPassword = true;
+        Placeholder = "••••••••";
+    }
+}
+
+public class NVPasswordStrength : ThemeAwareView
+{
+    public static readonly BindableProperty PasswordProperty = BindableProperty.Create(nameof(Password), typeof(string), typeof(NVPasswordStrength), "", propertyChanged: Refresh);
+    readonly NVProgressBar _bar = new();
+    readonly NVCaptionText _caption = new();
+    public NVPasswordStrength()
+    {
+        Content = new VerticalStackLayout { Spacing = NVTokens.Space1, Children = { _bar, _caption } };
+        ApplyTheme();
+    }
+    public string Password { get => (string)GetValue(PasswordProperty); set => SetValue(PasswordProperty, value); }
+    public int Score => NVPasswordRules.Score(Password);
+    static void Refresh(BindableObject b, object o, object n) => ((NVPasswordStrength)b).ApplyTheme();
+    protected override void ApplyTheme()
+    {
+        _bar.Value = Score / 4d;
+        _caption.Text = NVPasswordRules.Caption(Score);
+    }
+}
+
+public class NVQuantityStepper : NVNumericUpDown
+{
+    public NVQuantityStepper() => Value = 1;
+}
+
+public class NVDateRangePicker : ThemeAwareView
+{
+    public static readonly BindableProperty StartProperty = BindableProperty.Create(nameof(Start), typeof(DateTime), typeof(NVDateRangePicker), DateTime.Today, BindingMode.TwoWay, propertyChanged: Refresh);
+    public static readonly BindableProperty EndProperty = BindableProperty.Create(nameof(End), typeof(DateTime), typeof(NVDateRangePicker), DateTime.Today.AddDays(2), BindingMode.TwoWay, propertyChanged: Refresh);
+    readonly NVDatePicker _start = new() { Label = "From" };
+    readonly NVDatePicker _end = new() { Label = "To" };
+    public NVDateRangePicker()
+    {
+        _start.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(NVDatePicker.Date)) Start = _start.Date; };
+        _end.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(NVDatePicker.Date)) End = _end.Date; };
+        Content = new HorizontalStackLayout { Spacing = NVTokens.Space2, Children = { _start, _end } };
+        ApplyTheme();
+    }
+    public DateTime Start { get => (DateTime)GetValue(StartProperty); set => SetValue(StartProperty, value); }
+    public DateTime End { get => (DateTime)GetValue(EndProperty); set => SetValue(EndProperty, value); }
+    static void Refresh(BindableObject b, object o, object n) => ((NVDateRangePicker)b).ApplyTheme();
+    protected override void ApplyTheme()
+    {
+        _start.Date = Start;
+        _end.Date = End < Start ? Start : End;
+    }
+}
+
+public class NVMonthYearPicker : NVDatePicker
+{
+    public NVMonthYearPicker() => Label = "Month";
+}
+
+public class NVFilterBar : NVChipGroup
+{
+    public NVFilterBar() => Items = new List<string> { "All", "Open", "Done" };
+}
+
+public class NVTagInput : NVChipGroup
+{
+    public NVTagInput() => Items = new List<string> { "maui", "lumina" };
+}
+
+public class NVPinPad : ThemeAwareView
+{
+    public static readonly BindableProperty CodeProperty = BindableProperty.Create(nameof(Code), typeof(string), typeof(NVPinPad), "", BindingMode.TwoWay, propertyChanged: Refresh);
+    readonly NVOtpInput _otp = new() { Length = 4 };
+    readonly NVWrapLayout _keys = new();
+    public NVPinPad()
+    {
+        _otp.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(NVOtpInput.Code)) Code = _otp.Code; };
+        _keys.Items = new List<string> { "1", "2", "3", "4", "5", "6", "7", "8", "9", "⌫", "0", "OK" };
+        Content = new VerticalStackLayout { Spacing = NVTokens.Space3, Children = { _otp, _keys } };
+        ApplyTheme();
+    }
+    public string Code { get => (string)GetValue(CodeProperty); set => SetValue(CodeProperty, value); }
+    static void Refresh(BindableObject b, object o, object n) => ((NVPinPad)b).ApplyTheme();
+    protected override void ApplyTheme() => _otp.Code = Code;
+}
+
+public class NVCopyable : ThemeAwareView
+{
+    public static readonly BindableProperty TextProperty = BindableProperty.Create(nameof(Text), typeof(string), typeof(NVCopyable), "", propertyChanged: Refresh);
+    readonly NVHeading _text = new() { Role = NVTextRole.Body };
+    readonly NVButton _copy = new() { Text = "Copy", Variant = NVButtonVariant.Ghost };
+    public NVCopyable()
+    {
+        Content = new HorizontalStackLayout { Spacing = NVTokens.Space2, Children = { _text, _copy } };
+        ApplyTheme();
+    }
+    public string Text { get => (string)GetValue(TextProperty); set => SetValue(TextProperty, value); }
+    static void Refresh(BindableObject b, object o, object n) => ((NVCopyable)b).ApplyTheme();
+    protected override void ApplyTheme() => _text.Text = Text;
+}
+
+public class NVLink : ThemeAwareView
+{
+    public static readonly BindableProperty TextProperty = BindableProperty.Create(nameof(Text), typeof(string), typeof(NVLink), "Learn more", propertyChanged: Refresh);
+    readonly Label _label = new() { FontFamily = NVTokens.FontSemiBold, FontSize = NVTokens.BodySize };
+    public NVLink() { Content = _label; ApplyTheme(); }
+    public string Text { get => (string)GetValue(TextProperty); set => SetValue(TextProperty, value); }
+    static void Refresh(BindableObject b, object o, object n) => ((NVLink)b).ApplyTheme();
+    protected override void ApplyTheme()
+    {
+        _label.Text = Text;
+        _label.TextColor = NVTheme.Current.Accent;
+    }
+}
+
+public class NVCountryPicker : NVComboBox
+{
+    public NVCountryPicker()
+    {
+        Label = "Country";
+        Items = new List<string> { "India", "United States", "Germany", "Japan" };
+    }
+}
+
+public class NVLanguagePicker : NVComboBox
+{
+    public NVLanguagePicker()
+    {
+        Label = "Language";
+        Items = new List<string> { "English", "हिन्दी", "Español" };
+    }
+}
+
+public class NVThemePicker : NVSegmentedControl
+{
+    public NVThemePicker()
+    {
+        Items = new List<string> { "Light", "Dark", "System" };
+        PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(SelectedIndex))
+            {
+                NVTheme.Current.SetMode(SelectedIndex switch
+                {
+                    1 => NVThemeMode.Dark,
+                    2 => NVThemeMode.System,
+                    _ => NVThemeMode.Light
+                });
+            }
+        };
+    }
+}

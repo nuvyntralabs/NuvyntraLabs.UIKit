@@ -1,10 +1,13 @@
 namespace NuvyntraLabs.UIKit.Sample.Pages;
 
-public sealed class ThemePage : ContentPage
+public sealed class ThemePage : CatalogSectionPage
 {
-    public ThemePage()
+    public ThemePage() : base("01  Theme",
+        "Foundation first. NV-FND-01 … NV-FND-08. Mode applies to every later page.",
+        Build) { }
+
+    static IEnumerable<View> Build()
     {
-        Title = "Theme";
         var light = new NVButton { Text = "Light", Variant = NVButtonVariant.Outline };
         var dark = new NVButton { Text = "Dark", Variant = NVButtonVariant.Outline };
         var system = new NVButton { Text = "System", Variant = NVButtonVariant.Tonal };
@@ -12,52 +15,42 @@ public sealed class ThemePage : ContentPage
         dark.Command = new Command(() => NVTheme.Current.SetMode(NVThemeMode.Dark));
         system.Command = new Command(() => NVTheme.Current.SetMode(NVThemeMode.System));
 
-        Content = Wrap(new VerticalStackLayout
-        {
-            Spacing = NVTokens.Space4,
-            Children =
+        yield return Gallery.Sample(1, "NVTheme", "NV-FND-01  ·  Light / dark / system",
+            new HorizontalStackLayout { Spacing = NVTokens.Space2, Children = { light, dark, system } });
+        yield return Gallery.Sample(2, "NVTokens", "NV-FND-02  ·  Paper, surface, accent, ink, danger", SwatchRow());
+        yield return Gallery.Sample(3, "NVTypography", "NV-FND-03  ·  Display / title / body / caption",
+            new VerticalStackLayout
             {
-                Heading("Lumina"),
-                Body("Warm paper, aurora accent. Not Material, Fluent, or a vendor default."),
-                new HorizontalStackLayout
+                Spacing = NVTokens.Space1,
+                Children =
                 {
-                    Spacing = NVTokens.Space2,
-                    Children = { light, dark, system }
-                },
-                SwatchRow()
-            }
-        });
-
-        NVTheme.Current.Changed += (_, _) => ApplyPage();
-        ApplyPage();
+                    new NVHeading { Text = "Display", Role = NVTextRole.Display },
+                    new NVHeading { Text = "Title", Role = NVTextRole.Title },
+                    new NVBodyText { Text = "Body" },
+                    new NVCaptionText { Text = "Caption" }
+                }
+            });
+        yield return Gallery.Sample(4, "NVIcons", "NV-FND-04  ·  Stroke glyphs",
+            new HorizontalStackLayout
+            {
+                Spacing = NVTokens.Space3,
+                Children =
+                {
+                    new NVIcon { Kind = NVIconKind.Home },
+                    new NVIcon { Kind = NVIconKind.Search },
+                    new NVIcon { Kind = NVIconKind.Settings },
+                    new NVIcon { Kind = NVIconKind.Star }
+                }
+            });
+        yield return Gallery.Sample(5, "NVMotion", "NV-FND-05  ·  Fast / normal / slow; honor reduce-motion",
+            new NVCaptionText { Text = $"Normal duration {NVMotion.Normal} ms" });
+        yield return Gallery.Sample(6, "NVDensity", "NV-FND-06  ·  Comfortable default",
+            new NVCaptionText { Text = NVTheme.Current.Density.ToString() });
+        yield return Gallery.Sample(7, "NVVisualState", "NV-FND-07  ·  Rest / press / focus / disabled / error",
+            new NVCaptionText { Text = string.Join(" · ", new[] { NVVisualState.Rest, NVVisualState.Press, NVVisualState.Error }) });
+        yield return Gallery.Sample(8, "NVAccessibility", "NV-FND-08  ·  Body contrast on paper",
+            new NVCaptionText { Text = NVAccessibility.BodyContrastOk(NVTheme.Current.Ink, NVTheme.Current.Paper) ? "Pass ≥ 4.5:1" : "Fail" });
     }
-
-    void ApplyPage()
-    {
-        BackgroundColor = NVTheme.Current.Paper;
-    }
-
-    static View Wrap(View inner) => new ScrollView
-    {
-        Padding = NVTokens.Space5,
-        Content = inner
-    };
-
-    static Label Heading(string text) => new()
-    {
-        Text = text,
-        FontFamily = NVTokens.FontSemiBold,
-        FontSize = NVTokens.TitleSize,
-        TextColor = NVTheme.Current.Ink
-    };
-
-    static Label Body(string text) => new()
-    {
-        Text = text,
-        FontFamily = NVTokens.FontRegular,
-        FontSize = NVTokens.BodySize,
-        TextColor = NVTheme.Current.Muted
-    };
 
     static View SwatchRow()
     {

@@ -34,7 +34,7 @@
     <PackageProjectUrl>https://nuvyntralabs.github.io/packages/nuvyntralabs-uikit/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nuvyntralabs/NuvyntraLabs.UIKit</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>0.1.0: Phase 0 — Lumina tokens, NVTheme, NVButton, NVCheckBox, NVRadioButton, NVTextField, NVSurface. nuget.org after all phases.</PackageReleaseNotes>
+    <PackageReleaseNotes>1.0.0: Full Lumina catalog — 96 NV* controls, 49 page recipes, tokens, Shell sample. CI packs; nuget.org publish stays pipeline-owned.</PackageReleaseNotes>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

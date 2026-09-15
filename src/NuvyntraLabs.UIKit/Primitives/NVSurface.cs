@@ -13,7 +13,7 @@ public class NVSurface : ThemeAwareView
     {
         _border.Padding = NVTokens.Space4;
         _border.StrokeThickness = 1;
-        Content = _border;
+        base.Content = _border;
         ApplyTheme();
     }
 
