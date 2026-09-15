@@ -1,0 +1,16 @@
+# NuvyntraLabs.UIKit
+
+Package: NuvyntraLabs.UIKit
+GitHub: https://github.com/nuvyntralabs/NuvyntraLabs.UIKit
+Catalog: https://github.com/nuvyntralabs/MauiEssentials
+Plan: https://github.com/nuvyntralabs/MauiEssentials/blob/main/docs/plans/nuvyntralabs-uikit.md
+Version: 0.1.0 (dev). nuget.org after all phases.
+TFMs: net10.0, net10.0-android, net10.0-ios, net10.0-maccatalyst, net10.0-windows10.0.19041.0
+Prefix: NV (NVCheckBox, NVRadioButton)
+Xmlns: http://nuvyntralabs.com/uikit → nv
+Register: UseNuvyntraUIKit()
+Theme: NVTheme.Current / Lumina
+Phase 0 types: NVTheme, NVTokens, NVSurface, NVButton, NVCheckBox, NVRadioButton, NVRadioGroup, NVTextField
+Do not PackageReference Plugin.Maui.* from this library.
+Do not copy Syncfusion or Telerik chrome.
+Never dotnet nuget push from a local clone.

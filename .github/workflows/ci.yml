@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  version-align:
+    name: Version alignment
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: nuvyntralabs/MauiEssentials
+          ref: main
+          path: .ci-tools
+      - name: Require matching packable package versions
+        run: |
+          set -euo pipefail
+          script=".ci-tools/.github/scripts/check-versions.py"
+          python3 "$script" --plugin-root .
+
+  test:
+    name: Unit tests
+    needs: [version-align]
+    uses: ./.github/workflows/plugin-ci.yml
+    with:
+      runner: ubuntu-latest
+      frameworks: net10.0
+      pack: false
+      test: true
+      job_name: Unit tests
+
+  linux:
+    needs: [test]
+    uses: ./.github/workflows/plugin-ci.yml
+    with:
+      runner: ubuntu-latest
+      frameworks: net10.0
+      pack: true
+      test: false
+
+  macos:
+    needs: [test]
+    uses: ./.github/workflows/plugin-ci.yml
+    with:
+      runner: macos-latest
+      frameworks: net10.0,net10.0-android,net10.0-ios,net10.0-maccatalyst
+      pack: true
+      test: false
+      install_workloads: true
+      workloads: maui-android maui-ios maui-maccatalyst
+
+# nuget.org publish is intentionally omitted until every UIKit phase is complete.

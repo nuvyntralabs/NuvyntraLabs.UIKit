@@ -1,0 +1,42 @@
+# NuvyntraLabs.UIKit
+
+[![NuGet](https://img.shields.io/nuget/v/NuvyntraLabs.UIKit.svg?label=NuGet)](https://www.nuget.org/packages/NuvyntraLabs.UIKit)
+
+Lumina-themed UI kit for **.NET MAUI** on **Android**, **iOS**, **Mac Catalyst**, and **Windows**. One library: `NV*` controls, tokens, and page recipes.
+
+This is a **UI library**, not a MauiEssentials runtime plugin. nuget.org publish waits until every phase in the [hub plan](https://github.com/nuvyntralabs/MauiEssentials/blob/main/docs/plans/nuvyntralabs-uikit.md) is done.
+
+## Install
+
+```bash
+dotnet add package NuvyntraLabs.UIKit
+```
+
+```csharp
+builder
+    .UseMauiApp<App>()
+    .UseNuvyntraUIKit();
+```
+
+```xml
+xmlns:nv="http://nuvyntralabs.com/uikit"
+
+<nv:NVCheckBox Text="Accept terms" IsChecked="{Binding Accept}" />
+<nv:NVRadioButton GroupName="Plan" Text="Monthly" />
+<nv:NVTextField Label="Email" Text="{Binding Email}" />
+<nv:NVButton Text="Continue" Variant="Filled" Command="{Binding Submit}" />
+```
+
+## Phase 0 (0.1.0)
+
+`NVTheme`, `NVTokens`, `NVSurface`, `NVButton`, `NVCheckBox`, `NVRadioButton`, `NVRadioGroup`, `NVTextField`.
+
+Full catalog: [nuvyntralabs-uikit-components.md](https://github.com/nuvyntralabs/MauiEssentials/blob/main/docs/plans/nuvyntralabs-uikit-components.md).
+
+## Platforms
+
+`net10.0`, `net10.0-android` (API 21+), `net10.0-ios` (15+), `net10.0-maccatalyst` (15+), `net10.0-windows10.0.19041.0`.
+
+## License
+
+MIT. Font: Outfit (OFL). Look is original (Lumina) — not a Syncfusion or Telerik theme.
