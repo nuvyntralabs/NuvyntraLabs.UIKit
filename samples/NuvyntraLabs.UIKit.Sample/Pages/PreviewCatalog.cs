@@ -71,6 +71,27 @@ static class PreviewCatalog
             case NVButton button when string.IsNullOrWhiteSpace(button.Text) && button is not NVIconButton:
                 button.Text = "Continue";
                 break;
+            case NVHeading heading when string.IsNullOrWhiteSpace(heading.Text):
+                heading.Text = heading is NVCaptionText
+                    ? "Muted supporting line"
+                    : heading is NVBodyText
+                        ? "One kit for a typical mobile screen."
+                        : "Lumina";
+                break;
+            case NVCard card when string.IsNullOrWhiteSpace(card.Title):
+                card.Title = "Card";
+                card.Body = "Warm paper";
+                break;
+            case NVTextField field when string.IsNullOrWhiteSpace(field.Text) && string.IsNullOrWhiteSpace(field.Placeholder):
+                field.Label = string.IsNullOrWhiteSpace(field.Label) ? "Email" : field.Label;
+                field.Placeholder = "you@studio.dev";
+                break;
+            case NVChip chip when string.IsNullOrWhiteSpace(chip.Text):
+                chip.Text = "Filter";
+                break;
+            case NVBadge badge when string.IsNullOrWhiteSpace(badge.Text) && !badge.Dot:
+                badge.Text = "3";
+                break;
             case NVCheckBox check when string.IsNullOrWhiteSpace(check.Text):
                 check.Text = "Accept terms";
                 check.IsChecked = true;

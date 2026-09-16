@@ -7,7 +7,7 @@ namespace NuvyntraLabs.UIKit.Sample.Pages;
 public sealed class PreviewCapturePage : ContentPage
 {
     readonly string _output;
-    readonly Grid _stage;
+    readonly VerticalStackLayout _stage;
     readonly NVCaptionText _status = new();
 
     public PreviewCapturePage(string output)
@@ -17,11 +17,13 @@ public sealed class PreviewCapturePage : ContentPage
         BackgroundColor = NVTheme.Current.Paper;
         NVTheme.Current.SetMode(NVThemeMode.Light);
 
-        _stage = new Grid
+        _stage = new VerticalStackLayout
         {
             BackgroundColor = NVTheme.Current.Paper,
             Padding = NVTokens.Space5,
-            MinimumHeightRequest = 280
+            Spacing = 0,
+            VerticalOptions = LayoutOptions.Start,
+            HorizontalOptions = LayoutOptions.Fill
         };
 
         Content = new VerticalStackLayout
@@ -48,10 +50,12 @@ public sealed class PreviewCapturePage : ContentPage
         {
             index++;
             _status.Text = $"{index}/{items.Count}  {name}";
+            System.Diagnostics.Debug.WriteLine($"[preview-capture] {index}/{items.Count} {name}");
             _stage.Children.Clear();
             demo.HorizontalOptions = LayoutOptions.Fill;
+            demo.VerticalOptions = LayoutOptions.Start;
             _stage.Children.Add(demo);
-            await Task.Delay(120);
+            await Task.Delay(280);
 
             var path = Path.Combine(_output, $"{name}.png");
             try
@@ -72,8 +76,10 @@ public sealed class PreviewCapturePage : ContentPage
             }
         }
 
-        _status.Text = $"Wrote {Directory.GetFiles(_output, "*.png").Length} PNGs to {_output}";
-        await Task.Delay(400);
+        var count = Directory.GetFiles(_output, "*.png").Length;
+        _status.Text = $"Wrote {count} PNGs to {_output}";
+        System.Diagnostics.Debug.WriteLine($"[preview-capture] Wrote {count} PNGs to {_output}");
+        await Task.Delay(800);
         Application.Current?.Quit();
     }
 }
