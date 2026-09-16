@@ -101,40 +101,113 @@ public class NVPinPad : ThemeAwareView
     {
         _otp.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(NVOtpInput.Code)) Code = _otp.Code; };
         _keys.Items = new List<string> { "1", "2", "3", "4", "5", "6", "7", "8", "9", "⌫", "0", "OK" };
+        _keys.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(NVWrapLayout.Items))
+            {
+                WireKeys();
+            }
+        };
         Content = new VerticalStackLayout { Spacing = NVTokens.Space3, Children = { _otp, _keys } };
         ApplyTheme();
+        WireKeys();
     }
     public string Code { get => (string)GetValue(CodeProperty); set => SetValue(CodeProperty, value); }
+    public void Press(string key)
+    {
+        if (key == "⌫")
+        {
+            Code = Code.Length == 0 ? "" : Code[..^1];
+            return;
+        }
+
+        if (key == "OK" || key.Length != 1 || !char.IsDigit(key[0]) || Code.Length >= 4)
+        {
+            return;
+        }
+
+        Code += key;
+    }
     static void Refresh(BindableObject b, object o, object n) => ((NVPinPad)b).ApplyTheme();
     protected override void ApplyTheme() => _otp.Code = Code;
+    void WireKeys()
+    {
+        if (_keys.Content is not FlexLayout flex)
+        {
+            return;
+        }
+
+        foreach (var child in flex.Children.OfType<NVChip>())
+        {
+            var pick = child.Text;
+            child.GestureRecognizers.Clear();
+            var tap = new TapGestureRecognizer();
+            tap.Tapped += (_, _) => Press(pick);
+            child.GestureRecognizers.Add(tap);
+        }
+    }
 }
 
 public class NVCopyable : ThemeAwareView
 {
     public static readonly BindableProperty TextProperty = BindableProperty.Create(nameof(Text), typeof(string), typeof(NVCopyable), "", propertyChanged: Refresh);
+    public static readonly BindableProperty CopiedProperty = BindableProperty.Create(nameof(Copied), typeof(bool), typeof(NVCopyable), false, BindingMode.TwoWay, propertyChanged: Refresh);
     readonly NVHeading _text = new() { Role = NVTextRole.Body };
-    readonly NVButton _copy = new() { Text = "Copy", Variant = NVButtonVariant.Ghost };
+    readonly NVButton _copy = new() { Variant = NVButtonVariant.Ghost };
     public NVCopyable()
     {
+        _copy.Command = new Command(async () =>
+        {
+            Copied = true;
+            try
+            {
+                await Clipboard.Default.SetTextAsync(Text ?? "");
+            }
+            catch
+            {
+                // Host clipboard may be unavailable in tests.
+            }
+        });
         Content = new HorizontalStackLayout { Spacing = NVTokens.Space2, Children = { _text, _copy } };
         ApplyTheme();
     }
     public string Text { get => (string)GetValue(TextProperty); set => SetValue(TextProperty, value); }
+    public bool Copied { get => (bool)GetValue(CopiedProperty); set => SetValue(CopiedProperty, value); }
     static void Refresh(BindableObject b, object o, object n) => ((NVCopyable)b).ApplyTheme();
-    protected override void ApplyTheme() => _text.Text = Text;
+    protected override void ApplyTheme()
+    {
+        _text.Text = Text;
+        _copy.Text = Copied ? "Copied" : "Copy";
+    }
 }
 
 public class NVLink : ThemeAwareView
 {
     public static readonly BindableProperty TextProperty = BindableProperty.Create(nameof(Text), typeof(string), typeof(NVLink), "Learn more", propertyChanged: Refresh);
+    public static readonly BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(NVLink));
     readonly Label _label = new() { FontFamily = NVTokens.FontSemiBold, FontSize = NVTokens.BodySize };
-    public NVLink() { Content = _label; ApplyTheme(); }
+    public NVLink()
+    {
+        var tap = new TapGestureRecognizer();
+        tap.Tapped += (_, _) =>
+        {
+            if (Command?.CanExecute(null) == true)
+            {
+                Command.Execute(null);
+            }
+        };
+        _label.GestureRecognizers.Add(tap);
+        Content = _label;
+        ApplyTheme();
+    }
     public string Text { get => (string)GetValue(TextProperty); set => SetValue(TextProperty, value); }
+    public ICommand? Command { get => (ICommand?)GetValue(CommandProperty); set => SetValue(CommandProperty, value); }
     static void Refresh(BindableObject b, object o, object n) => ((NVLink)b).ApplyTheme();
     protected override void ApplyTheme()
     {
         _label.Text = Text;
         _label.TextColor = NVTheme.Current.Accent;
+        _label.TextDecorations = TextDecorations.Underline;
     }
 }
 

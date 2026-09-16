@@ -41,8 +41,16 @@ public class NVSearchBar : NVTextField
 
 public class NVMaskedEntry : NVTextField
 {
-    public static readonly BindableProperty MaskProperty = BindableProperty.Create(nameof(Mask), typeof(string), typeof(NVMaskedEntry), "0000");
+    public static readonly BindableProperty MaskProperty = BindableProperty.Create(nameof(Mask), typeof(string), typeof(NVMaskedEntry), "0000", propertyChanged: OnMask);
     public string Mask { get => (string)GetValue(MaskProperty); set => SetValue(MaskProperty, value); }
+    protected override string NormalizeText(string value) => NVMaskLogic.Apply(Mask, value);
+    static void OnMask(BindableObject b, object o, object n)
+    {
+        if (b is NVMaskedEntry field)
+        {
+            field.Text = NVMaskLogic.Apply(field.Mask, field.Text);
+        }
+    }
 }
 
 public class NVNumericEntry : NVTextField
@@ -128,13 +136,45 @@ public class NVOtpInput : ThemeAwareView
 
 public class NVAutoComplete : NVTextField
 {
-    public static readonly BindableProperty SuggestionsProperty = BindableProperty.Create(nameof(Suggestions), typeof(IList<string>), typeof(NVAutoComplete), new List<string>());
+    public static readonly BindableProperty SuggestionsProperty = BindableProperty.Create(nameof(Suggestions), typeof(IList<string>), typeof(NVAutoComplete), new List<string>(), propertyChanged: OnHits);
+    readonly VerticalStackLayout _hits = new() { Spacing = NVTokens.Space1 };
+    public NVAutoComplete()
+    {
+        var field = Content;
+        Content = new VerticalStackLayout { Spacing = NVTokens.Space2, Children = { field, _hits } };
+        PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(Text))
+            {
+                PaintHits();
+            }
+        };
+        PaintHits();
+    }
     public IList<string> Suggestions { get => (IList<string>)GetValue(SuggestionsProperty); set => SetValue(SuggestionsProperty, value); }
-
     public IEnumerable<string> Filter() => FilterSuggestions(Suggestions, Text);
-
     public static IEnumerable<string> FilterSuggestions(IEnumerable<string>? suggestions, string? text) =>
         (suggestions ?? []).Where(s => s.Contains(text ?? "", StringComparison.OrdinalIgnoreCase));
+    static void OnHits(BindableObject b, object o, object n)
+    {
+        if (b is NVAutoComplete field)
+        {
+            field.PaintHits();
+        }
+    }
+    void PaintHits()
+    {
+        _hits.Children.Clear();
+        foreach (var hit in Filter().Take(5))
+        {
+            var pick = hit;
+            var chip = new NVChip { Text = pick, Kind = NVChipKind.Assist };
+            var tap = new TapGestureRecognizer();
+            tap.Tapped += (_, _) => Text = pick;
+            chip.GestureRecognizers.Add(tap);
+            _hits.Children.Add(chip);
+        }
+    }
 }
 
 public class NVComboBox : ThemeAwareView
@@ -348,18 +388,63 @@ public class NVRangeSelector : NVRangeSlider { }
 public class NVSignaturePad : ThemeAwareView
 {
     public static readonly BindableProperty HasStrokeProperty = BindableProperty.Create(nameof(HasStroke), typeof(bool), typeof(NVSignaturePad), false);
+    readonly List<PointF> _points = [];
     readonly GraphicsView _canvas = new() { HeightRequest = 140 };
     public NVSignaturePad()
     {
-        var tap = new TapGestureRecognizer();
-        tap.Tapped += (_, _) => HasStroke = true;
-        _canvas.GestureRecognizers.Add(tap);
+        _canvas.Drawable = new NVSignatureDrawable(_points);
+        _canvas.StartInteraction += (_, e) =>
+        {
+            _points.Clear();
+            Add(e.Touches);
+        };
+        _canvas.DragInteraction += (_, e) => Add(e.Touches);
         Content = FieldChrome.Box(_canvas);
         ApplyTheme();
     }
     public bool HasStroke { get => (bool)GetValue(HasStrokeProperty); set => SetValue(HasStrokeProperty, value); }
     public string Export() => HasStroke ? "nv-signature" : "";
-    protected override void ApplyTheme() => _canvas.BackgroundColor = NVTheme.Current.Surface;
+    void Add(PointF[]? touches)
+    {
+        if (touches is { Length: > 0 })
+        {
+            _points.Add(touches[0]);
+            HasStroke = true;
+            _canvas.Invalidate();
+        }
+    }
+    protected override void ApplyTheme()
+    {
+        _canvas.BackgroundColor = NVTheme.Current.Surface;
+        _canvas.Invalidate();
+    }
+}
+
+sealed class NVSignatureDrawable(List<PointF> points) : IDrawable
+{
+    public void Draw(ICanvas canvas, RectF dirty)
+    {
+        canvas.FillColor = NVTheme.Current.Surface;
+        canvas.FillRectangle(dirty);
+        canvas.StrokeColor = NVTheme.Current.Ink;
+        canvas.StrokeSize = 2;
+        if (points.Count == 0)
+        {
+            canvas.FontColor = NVTheme.Current.Muted;
+            canvas.FontSize = 14;
+            canvas.DrawString("Sign here", dirty, HorizontalAlignment.Center, VerticalAlignment.Center);
+            return;
+        }
+
+        var path = new PathF();
+        path.MoveTo(points[0]);
+        foreach (var point in points.Skip(1))
+        {
+            path.LineTo(point);
+        }
+
+        canvas.DrawPath(path);
+    }
 }
 
 public class NVRating : ThemeAwareView

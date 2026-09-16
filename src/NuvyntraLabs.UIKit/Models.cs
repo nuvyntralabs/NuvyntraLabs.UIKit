@@ -7,6 +7,20 @@ public enum NVLayoutMode
     Card
 }
 
+public enum NVSelectionKind
+{
+    None,
+    Single,
+    Multiple
+}
+
+public enum NVSortDirection
+{
+    None,
+    Ascending,
+    Descending
+}
+
 public enum NVChipKind
 {
     Filter,
@@ -131,6 +145,7 @@ public sealed class NVGridColumn
     public string Binding { get; set; } = "";
     public string Key { get => Binding; set => Binding = value; }
     public bool Sortable { get; set; } = true;
+    public bool Frozen { get; set; }
 }
 
 public sealed class NVTreeNode
@@ -138,7 +153,13 @@ public sealed class NVTreeNode
     public string Title { get; set; } = "";
     public bool IsExpanded { get; set; }
     public bool IsChecked { get; set; }
+    public bool ChildrenLoaded { get; set; }
     public List<NVTreeNode> Children { get; } = [];
+}
+
+public sealed class NVListGroup : List<NVListItem>
+{
+    public string Name { get; set; } = "";
 }
 
 public sealed class NVChartPoint
@@ -196,4 +217,68 @@ public sealed class NVSpreadsheetCell
     public int Column { get; set; }
     public string Text { get; set; } = "";
     public string Value { get => Text; set => Text = value; }
+}
+
+public sealed class NVCommandItem
+{
+    public string Title { get; set; } = "";
+    public string? Group { get; set; }
+    public ICommand? Command { get; set; }
+}
+
+public sealed class NVCoachStep
+{
+    public string Title { get; set; } = "";
+    public string Body { get; set; } = "";
+    public View? Target { get; set; }
+}
+
+public sealed class NVMenuAction
+{
+    public string Text { get; set; } = "";
+    public ICommand? Command { get; set; }
+}
+
+public sealed class NVFileChip
+{
+    public string Name { get; set; } = "";
+    public long Size { get; set; }
+}
+
+public sealed class NVHeatDay
+{
+    public DateTime Date { get; set; }
+    public double Value { get; set; }
+}
+
+public sealed class NVSpeedDialAction
+{
+    public string Text { get; set; } = "";
+    public ICommand? Command { get; set; }
+}
+
+public sealed class NVPivotFact
+{
+    public string Row { get; set; } = "";
+    public string Column { get; set; } = "";
+    public double Value { get; set; }
+}
+
+public sealed class NVPropertyItem
+{
+    public string Name { get; set; } = "";
+    public object? Value { get; set; }
+    public NVFormFieldKind Kind { get; set; } = NVFormFieldKind.Text;
+}
+
+public enum NVDiffMode
+{
+    Unified,
+    SideBySide
+}
+
+public sealed class NVDeviceItem
+{
+    public string Name { get; set; } = "";
+    public bool IsConnected { get; set; }
 }

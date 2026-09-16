@@ -7,7 +7,7 @@
 - Docs: https://nuvyntralabs.github.io/packages/nuvyntralabs-uikit/
 - Catalog: [MauiEssentials](https://github.com/nuvyntralabs/MauiEssentials)
 
-Package: `NuvyntraLabs.UIKit` · Prefix: `NV` · Version: `1.0.0`
+Package: `NuvyntraLabs.UIKit` · Prefix: `NV` · Version: `1.4.0`
 
 Human + agent overview: [README.md](README.md). IDs: [nuvyntralabs-uikit-components.md](https://github.com/nuvyntralabs/MauiEssentials/blob/main/docs/plans/nuvyntralabs-uikit-components.md).
 
@@ -34,12 +34,15 @@ Enums used as property types:
 | `NVStatusReason` | `Empty`, `Offline`, `EmptyCart`, `NoPhotos`, `NoVideos`, `NoTasks`, `LocationDenied`, `PaymentFailed`, `NoCredits`, `Generic` |
 | `NVTextRole` | `Display`, `Title`, `Body`, `Caption` |
 | `NVLayoutMode` | `List`, `Tile`, `Card` |
+| `NVSelectionKind` | `None`, `Single`, `Multiple` |
+| `NVSortDirection` | `None`, `Ascending`, `Descending` |
 | `NVFormFieldKind` | `Text`, `Number`, `Boolean`, `Date`, `Enum` |
 | `NVChartSeriesKind` | `Line`, `Spline`, `Area`, `Bar`, `Column`, `Pie`, `Donut`, `Scatter`, `Bubble`, `Candle`, `Ohlc`, `Funnel`, `Pyramid`, `Polar`, `Radar`, `Sunburst`, `Spark` |
 | `NVBarcodeFormat` | `Code128`, `Qr` |
 | `NVThemeMode` | `Light`, `Dark`, `System` |
 | `NVDensity` | `Compact`, `Comfortable`, `Spacious` |
 | `OverlayPlacement` | `Center`, `Bottom`, `Top`, `Start`, `End` |
+| `NVDiffMode` | `Unified`, `SideBySide` |
 
 ---
 
@@ -771,8 +774,12 @@ Chrome compositions. No extra bindables.
 | --- | --- | --- | --- |
 | `Items` | `IList<NVListItem>` | empty | |
 | `LayoutMode` | `NVLayoutMode` | `List` | **custom** |
+| `SelectionMode` | `NVSelectionKind` | `None` | **custom** |
+| `SelectedItems` | `IList<NVListItem>` | empty | |
+| `Grouped` | `bool` | `false` | first-letter groups |
+| `AllowSwipe` | `bool` | `false` | |
 
-`NVListItem`: `Title`, `Subtitle`, `Detail`, `Icon`.
+`NVListItem`: `Title`, `Subtitle`, `Detail`, `Icon`. `NVListGroup`: `Name` + items. Hosted in MAUI `CollectionView` (virtualized).
 
 ### NVDataPager
 
@@ -795,8 +802,14 @@ Chrome compositions. No extra bindables.
 
 | Property | Type | Default | |
 | --- | --- | --- | --- |
-| `Columns` | `IList<NVGridColumn>` | | `Header`, `Binding`, `Key` **custom** alias, `Sortable` |
+| `Columns` | `IList<NVGridColumn>` | | `Header`, `Binding`, `Key` **custom** alias, `Sortable`, `Frozen` |
 | `Rows` | `IList<IDictionary<string, object?>>` | | **custom** |
+| `Filter` | `string` | `""` | case-insensitive cell match |
+| `SortKey` / `SortDirection` | `string` / `NVSortDirection` | none | header tap cycles none → asc → desc |
+| `PageSize` / `PageIndex` | `int` | `0` / `0` | `0` page size shows all; pager when `> 0` |
+| `FrozenColumnCount` | `int` | `0` | plus per-column `Frozen` |
+| `VisibleRows` | computed | | filtered / sorted / paged |
+| `NVTreeDataGrid.Roots` | `IList<NVTreeNode>` | | flatten + `Expand` once |
 
 ### NVTreeView / NVOrgChart
 
@@ -840,7 +853,7 @@ Chrome compositions. No extra bindables.
 
 | Property | Type | Default | |
 | --- | --- | --- | --- |
-| `Series` | `IList<NVChartSeries>` | | **custom** — `Title`, `Kind`, `Points` (`Category` / `Label`, `Value` / `Y`) |
+| `Series` | `IList<NVChartSeries>` | | **custom** — one `GraphicsView`; empty series does not throw |
 
 ### NVGauge / NVRadialGauge / NVDigitalGauge
 
@@ -864,7 +877,7 @@ Generate only (not camera scan).
 | Property | Type | Default | |
 | --- | --- | --- | --- |
 | `Value` | `string` | `"NUVEXA"` | |
-| `Format` | `NVBarcodeFormat` | `Code128` | **custom** |
+| `Format` | `NVBarcodeFormat` | `Code128` | **custom** — drawn Code128 bars or 21×21 QR |
 
 ### NVTreeMap / NVHeatMap / NVMap / NVMaps
 
@@ -887,9 +900,11 @@ Generate only (not camera scan).
 
 | Property | Type | Default | |
 | --- | --- | --- | --- |
-| `Month` | `DateTime` | today | **custom** |
-| `SelectedDate` | `DateTime?` | | |
+| `Month` | `DateTime` | today | **custom** — `NextMonth` / `PreviousMonth` |
+| `SelectedDate` | `DateTime?` | | last tap |
+| `SelectedDates` / `AllowMultiple` | `IList<DateTime>` / `bool` | empty / `false` | |
 | `Appointments` | `IList<NVAppointment>` | | **custom** — `Title`, `Start`, `End`, `Recurrence` |
+| `AgendaDate` / `RecurrenceCap` | `DateTime?` / `int` | / `64` | `Agenda` expands then filters |
 
 ---
 
@@ -906,8 +921,8 @@ Generate only (not camera scan).
 
 | Control | Properties | |
 | --- | --- | --- |
-| `NVImageEditor` | `Caption` **custom** | |
-| `NVPdfViewer` / `NVDocxViewer` | `Title` | |
+| `NVImageEditor` | `Caption`, `RotationDegrees`, `CropRect`, `Annotations` — `Rotate` / `Crop` / `Annotate` | |
+| `NVPdfViewer` / `NVDocxViewer` | `Title`, `Pages`, `Zoom`, `Query`, `PageIndex`, `MatchCount` | |
 | `NVMarkdownViewer` | `Markdown` **custom** | |
 | `NVRichTextEditor` | `NVEditor` (`Label=Rich text`) | |
 | `NVPromptInput` | `NVTextField` defaults | |
@@ -933,6 +948,7 @@ Generate only (not camera scan).
 | Property | Type | | |
 | --- | --- | --- | --- |
 | `NVChat.Messages` | `IList<NVChatMessage>` | **custom** — `Author`, `Text`, `IsMine`, `At` | |
+| `NVChat.Attachments` / `IsStreaming` | `IList<NVFileChip>` / `bool` | `AppendStream` / `Attach` | |
 | `NVAIPrompt.Text` | `string` | | |
 | `NVAiAssistView.Prompt` | `string` | **custom** | |
 
@@ -1209,6 +1225,62 @@ Compositions. `NVPermissionCard` has `Title`.
 
 ---
 
+## Next (1.2 app chrome)
+
+```xml
+<nv:NVCommandPalette Query="{Binding Query}" IsOpen="{Binding PaletteOpen}" />
+<nv:NVConsentBanner Text="We use cookies to keep Lumina useful." IsAccepted="{Binding Accepted}" />
+<nv:NVHeatCalendar Month="{Binding Month}" />
+```
+
+| Type | Property | Type | Default | |
+| --- | --- | --- | --- | --- |
+| `NVCommandPalette` | `Query` | `string` | `""` | **custom** |
+| | `Commands` / `Recents` | `IList<NVCommandItem>` | empty | **custom** |
+| `NVCoachMark` | `Steps` | `IList<NVCoachStep>` | empty | **custom** |
+| | `Index` | `int` | `0` | |
+| `NVContextMenu` | `Items` | `IList<NVMenuAction>` | empty | **custom** |
+| | `OpenCommand` | `ICommand` | open | **custom** |
+| `NVFileDrop` | `Files` | `IList<NVFileChip>` | empty | **custom** |
+| | `PickCommand` | `ICommand` | | **custom** |
+| `NVPaywall` | `Title` / `Message` | `string` | | |
+| | `IsBlocking` | `bool` | `false` | **custom** |
+| | `Plans` | `View` | | **custom** |
+| `NVWhatsNew` | `VersionTitle` | `string` | `"What's new"` | **custom** |
+| | `Items` | `IList<string>` | empty | |
+| `NVConsentBanner` | `Text` | `string` | privacy copy | |
+| | `IsAccepted` | `bool` | `false` | **custom** |
+| | `AcceptCommand` / `ManageCommand` | `ICommand` | | **custom** |
+| `NVHeatCalendar` | `Month` | `DateTime` | today | **custom** |
+| | `Values` | `IList<NVHeatDay>` | empty | **custom** |
+
+Empty palette query shows `Recents`. Filter is case-insensitive. Paywall `Dismiss` is a no-op when `IsBlocking`. File drop ignores chips with an empty `Name`. Heat calendar cells equal days in `Month`; missing values draw empty.
+
+### 1.3 types
+
+| Type | Property | Type | |
+| --- | --- | --- | --- |
+| `NVSpeedDial` | `Actions` / `IsOpen` | `IList<NVSpeedDialAction>` / `bool` | **custom** |
+| `NVSubscriptionCard` | `Name` / `Price` / `Features` / `CtaText` / `CtaCommand` | | **custom** |
+| `NVEmojiPicker` | `Query` / `Glyphs` / `Selected` | | **custom** |
+| `NVPivotGrid` | `Facts` | `IList<NVPivotFact>` | **custom** |
+| `NVPropertyGrid` | `Items` | `IList<NVPropertyItem>` | **custom** |
+| `NVJsonTree` | `Json` | `string` | **custom** |
+| `NVDiffView` | `Left` / `Right` / `Mode` | `string` / `NVDiffMode` | **custom** |
+| `NVCodeEditor` | `Text` | `string` | |
+| `NVCallBar` | `Title` / `IsMuted` / `MuteCommand` / `EndCommand` | | **custom** |
+| `NVInCallView` | `Name` / `Elapsed` / `Keypad` | | **custom** |
+| `NVSyncConflictCard` | `Local` / `Remote` / `KeepCommand` / `TakeRemoteCommand` | | **custom** |
+| `NVUploadTile` | `FileName` / `Bytes` / `RetryCommand` | | **custom** |
+| `NVDeviceSheet` | `Devices` / `ConnectCommand` | | **custom** |
+| `NVPrintPreview` | `Page` / `PrintCommand` / `ShareCommand` | | **custom** |
+| `NVNfcPrompt` | `Status` | `string` | **custom** |
+| `NVReviewPrompt` | `Rating` / `NotNowCommand` / `ReviewCommand` | | **custom** |
+
+Host chrome types construct with null commands. The library does not `PackageReference` `Plugin.Maui.*`.
+
+---
+
 ## Page recipes (`NV*View`)
 
 Content compositions over the controls above. They do **not** add new bindable names; they set titles and seed demo children.
@@ -1228,6 +1300,8 @@ Content compositions over the controls above. They do **not** add new bindable n
 | Files | `NVNavigationHubView`, `NVMediaLibraryView`, `NVPlaylistView`, `NVFileExplorerView`, `NVDocumentsView`, `NVSuggestionsView` |
 | System | `NVStatusView`, `NVSettingsView`, `NVHelpView`, `NVNotificationsView`, `NVDeliveryTrackView`, `NVAddressBookView`, `NVBookingView`, `NVDashboardView` |
 | Extras | `NVPinLockView`, `NVForceUpdateView`, `NVSearchResultsView`, `NVFilterSheetView`, `NVMediaPlayerView`, `NVSplitInboxView`, `NVOnboardingPermissionsView`, `NVOrderSummaryView` |
+| Next (1.2) | `NVInvoiceView`, `NVReceiptView`, `NVCompareView`, `NVStoreLocatorView`, `NVSubscriptionView`, `NVWhatsNewView` |
+| Next (1.3) | `NVConflictResolveView`, `NVCallView`, `NVAddressFormView` |
 
 ---
 
@@ -1264,6 +1338,13 @@ Kit-invented names (use these instead of guessing MAUI equivalents):
 | `Amount` / `Seconds` / `Total` | currency, countdown, cart |
 | `Groups` / `Roots` / `Series` / `Nodes` / `Cells` / `Messages` / `Appointments` / `Fields` / `Columns` / `Rows` / `Seats` | data surfaces |
 | `Month` / `SelectedDate` | `NVCalendar` |
+| `Query` / `Commands` / `Recents` | `NVCommandPalette` |
+| `Steps` / `Index` | `NVCoachMark` |
+| `IsBlocking` / `Plans` | `NVPaywall` |
+| `VersionTitle` | `NVWhatsNew` |
+| `IsAccepted` | `NVConsentBanner` |
+| `Files` / `PickCommand` | `NVFileDrop` |
+| `Values` | `NVHeatCalendar` |
 | `Caption` | image / image editor |
 | `Markdown` / `Url` / `Prompt` | markdown, web, AI |
 | `Name` / `IsMine` / `Subtitle` | profile, bubble, list tile |

@@ -2,7 +2,7 @@
 
 ## Project
 
-Lumina UI kit for .NET MAUI. Single assembly `NuvyntraLabs.UIKit`. Types use the `NV` prefix. Foundation tokens, 177 controls (basics → advanced), and 57 page recipes.
+Lumina UI kit for .NET MAUI. Single assembly `NuvyntraLabs.UIKit`. Types use the `NV` prefix. Foundation tokens, 201 controls (basics → advanced + 1.2 / 1.3 chrome), and 66 page recipes. 1.4 deepens list / grid / chart / calendar / media behavior.
 
 - Package: `NuvyntraLabs.UIKit`
 - NuGet: https://www.nuget.org/packages/NuvyntraLabs.UIKit
@@ -10,7 +10,7 @@ Lumina UI kit for .NET MAUI. Single assembly `NuvyntraLabs.UIKit`. Types use the
 - Paper: https://nuvyntralabs.github.io/packages/nuvyntralabs-uikit/
 - Catalog: https://github.com/nuvyntralabs/MauiEssentials
 - Versions: net10.0, net10.0-android (API 21+), net10.0-ios (iOS 15+), net10.0-maccatalyst (15+), net10.0-windows (10.0.17763+; packed on Windows)
-- Version: 1.0.0
+- Version: 1.4.0
 
 ## When to consider this repository
 

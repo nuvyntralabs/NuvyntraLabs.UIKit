@@ -170,29 +170,53 @@ public class NVBadge : ThemeAwareView
 
 public class NVSkeleton : ThemeAwareView
 {
-    readonly BoxView _bar = new() { HeightRequest = 14 };
+    readonly VerticalStackLayout _stack = new() { Spacing = NVTokens.Space2 };
 
     public NVSkeleton()
     {
-        Content = _bar;
+        Content = _stack;
         ApplyTheme();
     }
 
-    protected override void ApplyTheme() => _bar.Color = NVTheme.Current.Mist;
+    protected override void ApplyTheme()
+    {
+        _stack.Children.Clear();
+        foreach (var width in new[] { 1.0, 0.72, 0.9 })
+        {
+            _stack.Children.Add(new BoxView
+            {
+                HeightRequest = 12,
+                WidthRequest = 220 * width,
+                Color = NVTheme.Current.Mist,
+                HorizontalOptions = LayoutOptions.Start
+            });
+        }
+    }
 }
 
 public class NVEffects : ThemeAwareView
 {
+    readonly NVSurface _surface = new() { Elevation = 1 };
+
     public NVEffects()
     {
-        Content = new ContentView();
+        _surface.Content = new NVCaptionText { Text = "Press" };
+        var tap = new TapGestureRecognizer();
+        tap.Tapped += async (_, _) =>
+        {
+            Opacity = 0.55;
+            await Task.Delay((int)NVTokens.MotionFast);
+            Opacity = 1;
+        };
+        GestureRecognizers.Add(tap);
+        Content = _surface;
         ApplyTheme();
     }
 
     public View? Target
     {
-        get => Content as View;
-        set => Content = value;
+        get => _surface.Content;
+        set => _surface.Content = value;
     }
 
     protected override void ApplyTheme() => Opacity = 1;
@@ -214,32 +238,65 @@ public static class NVElevation
 
 public class NVOverlay : OverlayHost
 {
+    public NVOverlay()
+    {
+        PanelContent = new VerticalStackLayout
+        {
+            Spacing = NVTokens.Space2,
+            Children =
+            {
+                new NVHeading { Text = "Overlay" },
+                new NVBodyText { Text = "Scrim + panel" },
+                new NVButton { Text = "Close", Variant = NVButtonVariant.Tonal, Command = new Command(() => IsOpen = false) }
+            }
+        };
+    }
 }
 
 public class NVInteractiveViewer : ThemeAwareView
 {
-    readonly Grid _host = new();
+    public static readonly BindableProperty ZoomProperty = BindableProperty.Create(nameof(Zoom), typeof(double), typeof(NVInteractiveViewer), 1d, BindingMode.TwoWay, propertyChanged: OnZoom);
+    readonly Grid _host = new() { HeightRequest = 160 };
+    readonly ContentView _stage = new();
 
     public NVInteractiveViewer()
     {
-        Content = _host;
+        var inn = new NVIconButton { Kind = NVIconKind.Plus, Variant = NVButtonVariant.Tonal };
+        var outt = new NVIconButton { Kind = NVIconKind.Minus, Variant = NVButtonVariant.Tonal };
+        var reset = new NVButton { Text = "Reset", Variant = NVButtonVariant.Ghost };
+        inn.Command = new Command(() => Zoom = Math.Min(3, Zoom + 0.25));
+        outt.Command = new Command(() => Zoom = Math.Max(0.5, Zoom - 0.25));
+        reset.Command = new Command(() => Zoom = 1);
+        _host.Add(_stage);
+        Content = new VerticalStackLayout
+        {
+            Spacing = NVTokens.Space2,
+            Children =
+            {
+                _host,
+                new HorizontalStackLayout { Spacing = NVTokens.Space2, Children = { outt, inn, reset } }
+            }
+        };
         ApplyTheme();
     }
 
+    public double Zoom { get => (double)GetValue(ZoomProperty); set => SetValue(ZoomProperty, value); }
+
     public View? Viewport
     {
-        get => _host.Children.Count > 0 ? _host.Children[0] as View : null;
-        set
+        get => _stage.Content;
+        set => _stage.Content = value ?? new NVCaptionText { Text = "Viewport" };
+    }
+
+    static void OnZoom(BindableObject b, object o, object n)
+    {
+        if (b is NVInteractiveViewer viewer)
         {
-            _host.Children.Clear();
-            if (value is not null)
-            {
-                _host.Children.Add(value);
-            }
+            viewer._stage.Scale = viewer.Zoom;
         }
     }
 
-    protected override void ApplyTheme() => _host.BackgroundColor = NVTheme.Current.Paper;
+    protected override void ApplyTheme() => _host.BackgroundColor = NVTheme.Current.Mist;
 }
 
 public class NVSpacer : ContentView

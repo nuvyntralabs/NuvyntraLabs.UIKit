@@ -42,12 +42,27 @@ public sealed class ThemePage : CatalogSectionPage
                     new NVIcon { Kind = NVIconKind.Star }
                 }
             });
+        var compact = new NVButton { Text = "Compact", Variant = NVButtonVariant.Outline };
+        var cozy = new NVButton { Text = "Comfortable", Variant = NVButtonVariant.Tonal };
+        var roomy = new NVButton { Text = "Spacious", Variant = NVButtonVariant.Outline };
+        compact.Command = new Command(() => NVTheme.Current.Density = NVDensity.Compact);
+        cozy.Command = new Command(() => NVTheme.Current.Density = NVDensity.Comfortable);
+        roomy.Command = new Command(() => NVTheme.Current.Density = NVDensity.Spacious);
         yield return Gallery.Sample(5, "NVMotion", "NV-FND-05  ·  Fast / normal / slow; honor reduce-motion",
-            new NVCaptionText { Text = $"Normal duration {NVMotion.Normal} ms" });
-        yield return Gallery.Sample(6, "NVDensity", "NV-FND-06  ·  Comfortable default",
-            new NVCaptionText { Text = NVTheme.Current.Density.ToString() });
-        yield return Gallery.Sample(7, "NVVisualState", "NV-FND-07  ·  Rest / press / focus / disabled / error",
-            new NVCaptionText { Text = string.Join(" · ", new[] { NVVisualState.Rest, NVVisualState.Press, NVVisualState.Error }) });
+            new NVStepProgressBar { Steps = new List<string> { "Fast 180", "Normal 280", "Slow 420" }, Index = 1 });
+        yield return Gallery.Sample(6, "NVDensity", "NV-FND-06  ·  Compact / comfortable / spacious",
+            new HorizontalStackLayout { Spacing = NVTokens.Space2, Children = { compact, cozy, roomy } });
+        yield return Gallery.Sample(7, "NVVisualState", "NV-FND-07  ·  Rest / press / disabled",
+            new HorizontalStackLayout
+            {
+                Spacing = NVTokens.Space2,
+                Children =
+                {
+                    new NVButton { Text = "Rest", Variant = NVButtonVariant.Filled },
+                    new NVButton { Text = "Disabled", Variant = NVButtonVariant.Filled, IsEnabled = false },
+                    new NVTextField { Label = "Error", Error = "Required" }
+                }
+            });
         yield return Gallery.Sample(8, "NVAccessibility", "NV-FND-08  ·  Body contrast on paper",
             new NVCaptionText { Text = NVAccessibility.BodyContrastOk(NVTheme.Current.Ink, NVTheme.Current.Paper) ? "Pass ≥ 4.5:1" : "Fail" });
     }

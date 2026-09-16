@@ -56,13 +56,19 @@ public class NVResetPasswordView : NVPageRecipe
 
 public class NVSocialSignInView : NVPageRecipe
 {
-    public NVSocialSignInView() : base("Social sign in", "Icon row + form",
+    public NVSocialSignInView() : base("Social sign in", "Continue with a provider or email",
         new HorizontalStackLayout
         {
             Spacing = NVTokens.Space2,
-            Children = { new NVIconButton { Kind = NVIconKind.User }, new NVIconButton { Kind = NVIconKind.Chat } }
+            Children =
+            {
+                new NVButton { Text = "Apple", Variant = NVButtonVariant.Outline },
+                new NVButton { Text = "Google", Variant = NVButtonVariant.Outline }
+            }
         },
-        new NVSignInView()) { }
+        new NVEmailField(),
+        new NVPasswordField(),
+        new NVButton { Text = "Continue", Variant = NVButtonVariant.Filled }) { }
 }
 
 public class NVTabbedAuthView : NVPageRecipe
@@ -103,8 +109,14 @@ public class NVArticleDetailView : NVPageRecipe { public NVArticleDetailView() :
 public class NVMyArticlesView : NVPageRecipe { public NVMyArticlesView() : base("My articles", "Author queue", new NVCollectionView { Items = Demo.Items("Draft") }) { } }
 public class NVReviewView : NVPageRecipe { public NVReviewView() : base("Review", "Stars + text", new NVRating { Value = 5 }, new NVEditor { Label = "Thoughts" }) { } }
 public class NVContactView : NVPageRecipe { public NVContactView() : base("Contact", "Reach us", new NVTextField { Label = "Message" }, new NVButton { Text = "Send" }) { } }
-public class NVAboutView : NVPageRecipe { public NVAboutView() : base("About", "NuvyntraLabs.UIKit 1.0") { } }
-public class NVFaqView : NVPageRecipe { public NVFaqView() : base("FAQ", "Accordion answers", new NVAccordion { Title = "What is Lumina?", IsExpanded = true }) { } }
+public class NVAboutView : NVPageRecipe
+{
+    public NVAboutView() : base("About", "NuvyntraLabs.UIKit 1.4 — Lumina controls and page recipes",
+        new NVBodyText { Text = "One MIT kit for a typical MAUI app. Tokens own the look." },
+        new NVLink { Text = "nuvyntralabs.github.io" },
+        new NVCaptionText { Text = "Outfit · aurora accent · warm paper" }) { }
+}
+public class NVFaqView : NVPageRecipe { public NVFaqView() : base("FAQ", "Accordion answers", new NVAccordion { Title = "What is Lumina?", IsExpanded = true, Panel = new NVBodyText { Text = "Warm paper, aurora accent, and one NV* type per job." } }) { } }
 public class NVBookmarksView : NVPageRecipe { public NVBookmarksView() : base("Bookmarks", "Saved reads", new NVCollectionView { Items = Demo.Items("Saved") }) { } }
 
 public class NVInboxView : NVPageRecipe { public NVInboxView() : base("Inbox", "Threads", new NVCollectionView { Items = Demo.Items("Lumina", "Studio") }) { } }
@@ -119,12 +131,12 @@ public class NVNavigationHubView : NVPageRecipe { public NVNavigationHubView() :
 public class NVMediaLibraryView : NVPageRecipe { public NVMediaLibraryView() : base("Library", "Media", new NVCollectionView { Items = Demo.Items("Clip 1"), LayoutMode = NVLayoutMode.Tile }) { } }
 public class NVPlaylistView : NVPageRecipe { public NVPlaylistView() : base("Playlist", "Tracks", new NVCollectionView { Items = Demo.Items("Track A") }) { } }
 public class NVFileExplorerView : NVPageRecipe { public NVFileExplorerView() : base("Files", "Tree", new NVTreeView { Roots = [new NVTreeNode { Title = "Documents", IsExpanded = true, Children = { new NVTreeNode { Title = "Notes" } } }] }) { } }
-public class NVDocumentsView : NVPageRecipe { public NVDocumentsView() : base("Documents", "PDF", new NVPdfViewer { Title = "Brief.pdf" }) { } }
+public class NVDocumentsView : NVPageRecipe { public NVDocumentsView() : base("Documents", "PDF", new NVPdfViewer { Title = "Brief.pdf", Pages = ["Brief", "Tokens"] }) { } }
 public class NVSuggestionsView : NVPageRecipe { public NVSuggestionsView() : base("Suggestions", "AI chips", new NVAIPrompt()) { } }
 
 public class NVStatusView : NVPageRecipe { public NVStatusView() : base("Status", "Empty / error", new NVEmptyView { Reason = NVStatusReason.Offline }) { } }
 public class NVSettingsView : NVPageRecipe { public NVSettingsView() : base("Settings", "Toggles", new NVSwitch { Text = "Dark", IsOn = false }) { } }
-public class NVHelpView : NVPageRecipe { public NVHelpView() : base("Help", "Support", new NVFaqView()) { } }
+public class NVHelpView : NVPageRecipe { public NVHelpView() : base("Help", "Support", new NVAccordion { Title = "How do I theme?", IsExpanded = true, Panel = new NVBodyText { Text = "Call NVTheme.Current.SetMode from any page." } }, new NVLink { Text = "Read the docs" }) { } }
 public class NVNotificationsView : NVPageRecipe { public NVNotificationsView() : base("Notifications", "Inbox", new NVBanner { Text = "Welcome to Lumina", Tone = NVBannerTone.Info }) { } }
 public class NVDeliveryTrackView : NVPageRecipe { public NVDeliveryTrackView() : base("Delivery", "Track", new NVStepProgressBar { Steps = new List<string> { "Packed", "Ship", "Delivered" }, Index = 1 }) { } }
 public class NVAddressBookView : NVPageRecipe { public NVAddressBookView() : base("Addresses", "Book", new NVCollectionView { Items = Demo.Items("Home", "Studio") }) { } }
@@ -156,6 +168,104 @@ public class NVMediaPlayerView : NVPageRecipe { public NVMediaPlayerView() : bas
 public class NVSplitInboxView : NVPageRecipe { public NVSplitInboxView() : base("Inbox", "Master-detail", new NVMasterDetail()) { } }
 public class NVOnboardingPermissionsView : NVPageRecipe { public NVOnboardingPermissionsView() : base("Permissions", "Rationale", new NVPermissionCard { Title = "Notifications" }, new NVPermissionCard { Title = "Location" }) { } }
 public class NVOrderSummaryView : NVPageRecipe { public NVOrderSummaryView() : base("Summary", "Sticky pay bar", new NVCollectionView { Items = Demo.Items("Lamp") }, new NVCartBar { Total = 42 }) { } }
+
+public class NVInvoiceView : NVPageRecipe
+{
+    public NVInvoiceView() : base("Invoice", "Line items + total",
+        new NVCollectionView { Items = Demo.Items("Design", "Build") },
+        new NVCurrencyLabel { Amount = 860 },
+        new NVStickyBar { Text = "Send invoice" }) { }
+}
+
+public class NVReceiptView : NVPageRecipe
+{
+    public NVReceiptView() : base("Receipt", "Ticket + total + barcode",
+        new NVTicket { Title = "Studio session", Code = "NUV-2048" },
+        new NVCurrencyLabel { Amount = 42 },
+        new NVBarcode { Value = "NUV-2048" }) { }
+}
+
+public class NVCompareView : NVPageRecipe
+{
+    public NVCompareView() : base("Compare", "Two columns + checklist",
+        new HorizontalStackLayout
+        {
+            Spacing = NVTokens.Space3,
+            Children =
+            {
+                new NVCard { Title = "Free", Body = "Core kit" },
+                new NVCard { Title = "Plus", Body = "Coach + palette" }
+            }
+        },
+        new NVCheckList { Items = new List<string> { "Tokens", "Recipes", "Palette" } }) { }
+}
+
+public class NVStoreLocatorView : NVPageRecipe
+{
+    public NVStoreLocatorView() : base("Stores", "List + map slot",
+        new NVCollectionView { Items = Demo.Items("Aurora studio", "Paper loft"), LayoutMode = NVLayoutMode.List },
+        new NVMap { Place = "Aurora" },
+        new NVEmptyView { Title = "No stores nearby", Reason = NVStatusReason.LocationDenied }) { }
+}
+
+public class NVSubscriptionView : NVPageRecipe
+{
+    public NVSubscriptionView() : base("Subscribe", "Paywall gate",
+        new NVPaywall
+        {
+            Title = "Lumina Plus",
+            Message = "Unlock coach marks and the command palette",
+            IsOpen = true,
+            IsBlocking = false,
+            Plans = new HorizontalStackLayout
+            {
+                Spacing = NVTokens.Space2,
+                Children =
+                {
+                    new NVCard { Title = "Monthly", Body = "$8" },
+                    new NVCard { Title = "Yearly", Body = "$72" }
+                }
+            }
+        }) { }
+}
+
+public class NVWhatsNewView : NVPageRecipe
+{
+    public NVWhatsNewView() : base("What's new", "Release notes",
+        new NVWhatsNew
+        {
+            VersionTitle = "1.2.0",
+            IsOpen = true,
+            Items = new List<string> { "Command palette", "Coach marks", "Heat calendar" }
+        }) { }
+}
+
+public class NVConflictResolveView : NVPageRecipe
+{
+    public NVConflictResolveView() : base("Conflict", "Keep or take remote",
+        new NVSyncConflictCard { Local = "Studio draft", Remote = "Cloud copy" }) { }
+}
+
+public class NVCallView : NVPageRecipe
+{
+    public NVCallView() : base("Call", "In-call chrome",
+        new NVInCallView { Name = "Ada", Elapsed = "01:12", Keypad = new NVPinPad() }) { }
+}
+
+public class NVAddressFormView : NVPageRecipe
+{
+    public NVAddressFormView() : base("Address", "Country + phone",
+        new NVDataForm
+        {
+            Fields =
+            [
+                NVFormField.For("Street", typeof(string)),
+                NVFormField.For("City", typeof(string))
+            ]
+        },
+        new NVCountryPicker(),
+        new NVPhoneField()) { }
+}
 
 static class Demo
 {

@@ -22,18 +22,45 @@ static class Gallery
     public static View Chapter(string title) =>
         new NVSectionHeader { Text = title };
 
-    public static View Sample(int number, string typeName, string note, View demo) =>
-        new VerticalStackLayout
+    public static View Sample(int number, string typeName, string note, View demo)
+    {
+        var surface = new NVSurface { Elevation = 1 };
+        surface.Content = new VerticalStackLayout
         {
-            Spacing = NVTokens.Space2,
+            Spacing = NVTokens.Space3,
             Children =
             {
-                new NVHeading { Text = $"{number:00}  {typeName}", Role = NVTextRole.Body },
+                new NVHeading { Text = $"{number:00}  {typeName}", Role = NVTextRole.Title },
                 new NVCaptionText { Text = note },
-                demo,
-                new NVDivider()
+                demo
             }
         };
+        return surface;
+    }
+
+    public static View Overlay(int number, string typeName, string note, OverlayHost overlay)
+    {
+        overlay.IsOpen = false;
+        var show = new NVButton { Text = $"Show {typeName}", Variant = NVButtonVariant.Tonal };
+        var stage = new Grid { MinimumHeightRequest = 8 };
+        show.Command = new Command(() => overlay.IsOpen = !overlay.IsOpen);
+        overlay.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName != nameof(OverlayHost.IsOpen))
+            {
+                return;
+            }
+
+            show.Text = overlay.IsOpen ? "Dismiss" : $"Show {typeName}";
+            stage.HeightRequest = overlay.IsOpen ? 280 : -1;
+        };
+        stage.Children.Add(overlay);
+        return Sample(number, typeName, note, new VerticalStackLayout
+        {
+            Spacing = NVTokens.Space2,
+            Children = { show, stage }
+        });
+    }
 }
 
 public abstract class CatalogSectionPage : ContentPage
@@ -41,6 +68,12 @@ public abstract class CatalogSectionPage : ContentPage
     protected CatalogSectionPage(string title, string intro, Func<IEnumerable<View>> build)
     {
         Title = title;
+        ToolbarItems.Add(new ToolbarItem
+        {
+            Text = "Theme",
+            Command = new Command(() =>
+                NVTheme.Current.SetMode(NVTheme.Current.IsDark ? NVThemeMode.Light : NVThemeMode.Dark))
+        });
         Content = Gallery.Page(title, intro, build());
         NVTheme.Current.Changed += (_, _) => BackgroundColor = NVTheme.Current.Paper;
         BackgroundColor = NVTheme.Current.Paper;

@@ -68,21 +68,51 @@ public class NVBubble : ThemeAwareView
         _card.Title = IsMine ? "You" : "Them";
         _card.Body = Text;
         HorizontalOptions = IsMine ? LayoutOptions.End : LayoutOptions.Start;
+        if (_card.Content is Border border)
+        {
+            border.BackgroundColor = IsMine ? NVTheme.Current.Accent.WithAlpha(0.16f) : NVTheme.Current.Surface;
+        }
     }
 }
 
 public class NVTypingIndicator : ThemeAwareView
 {
-    readonly NVCaptionText _label = new() { Text = "Typing…" };
-    public NVTypingIndicator() { Content = _label; ApplyTheme(); }
-    protected override void ApplyTheme() { }
+    readonly HorizontalStackLayout _dots = new() { Spacing = 6 };
+    public NVTypingIndicator() { Content = _dots; ApplyTheme(); }
+    protected override void ApplyTheme()
+    {
+        _dots.Children.Clear();
+        foreach (var size in new[] { 8, 10, 8 })
+        {
+            _dots.Children.Add(new BoxView
+            {
+                WidthRequest = size,
+                HeightRequest = size,
+                CornerRadius = size / 2,
+                Color = NVTheme.Current.Accent,
+                VerticalOptions = LayoutOptions.Center
+            });
+        }
+        _dots.Children.Add(new NVCaptionText { Text = "Typing…" });
+    }
 }
 
 public class NVStoryRing : ThemeAwareView
 {
     readonly NVAvatar _avatar = new() { Initials = "ST", StatusOn = true };
-    public NVStoryRing() { Content = _avatar; ApplyTheme(); }
-    protected override void ApplyTheme() { }
+    readonly Border _ring = new() { Padding = 3, StrokeThickness = 2 };
+    public NVStoryRing()
+    {
+        _ring.Content = _avatar;
+        Content = _ring;
+        ApplyTheme();
+    }
+    protected override void ApplyTheme()
+    {
+        _ring.Stroke = NVTheme.Current.Accent;
+        _ring.StrokeShape = new Ellipse();
+        _ring.BackgroundColor = Colors.Transparent;
+    }
 }
 
 public class NVReactionBar : ThemeAwareView

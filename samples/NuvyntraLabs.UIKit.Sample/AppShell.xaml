@@ -45,4 +45,7 @@
     <FlyoutItem Title="13  Pages">
         <ShellContent ContentTemplate="{DataTemplate pages:RecipesPage}" Route="pages" />
     </FlyoutItem>
+    <FlyoutItem Title="14  Next">
+        <ShellContent ContentTemplate="{DataTemplate pages:NextPage}" Route="next" />
+    </FlyoutItem>
 </Shell>

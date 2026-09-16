@@ -1,5 +1,6 @@
 namespace NuvyntraLabs.UIKit.Tests;
 
+[Collection("UIKit")]
 public class NVThemeTests
 {
     public NVThemeTests()

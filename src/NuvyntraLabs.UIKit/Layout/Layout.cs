@@ -43,27 +43,34 @@ public class NVExpander : ThemeAwareView
     public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Title), typeof(string), typeof(NVExpander), "Section", propertyChanged: Refresh);
     public static readonly BindableProperty IsExpandedProperty = BindableProperty.Create(nameof(IsExpanded), typeof(bool), typeof(NVExpander), false, BindingMode.TwoWay, propertyChanged: Refresh);
     readonly Label _title = new() { FontFamily = NVTokens.FontSemiBold };
-    readonly Label _body = new() { FontFamily = NVTokens.FontRegular, Text = "Expanded content" };
+    readonly ContentView _panel = new();
+    readonly Label _fallback = new() { FontFamily = NVTokens.FontRegular, Text = "Expanded content" };
 
     public NVExpander()
     {
         var tap = new TapGestureRecognizer();
         tap.Tapped += (_, _) => IsExpanded = !IsExpanded;
         _title.GestureRecognizers.Add(tap);
-        Content = new VerticalStackLayout { Spacing = NVTokens.Space2, Children = { _title, _body } };
+        _panel.Content = _fallback;
+        Content = new VerticalStackLayout { Spacing = NVTokens.Space2, Children = { _title, _panel } };
         ApplyTheme();
     }
 
     public string Title { get => (string)GetValue(TitleProperty); set => SetValue(TitleProperty, value); }
     public bool IsExpanded { get => (bool)GetValue(IsExpandedProperty); set => SetValue(IsExpandedProperty, value); }
+    public View? Panel
+    {
+        get => ReferenceEquals(_panel.Content, _fallback) ? null : _panel.Content;
+        set => _panel.Content = value ?? _fallback;
+    }
     static void Refresh(BindableObject b, object o, object n) => ((NVExpander)b).ApplyTheme();
 
     protected override void ApplyTheme()
     {
         _title.Text = (IsExpanded ? "▾ " : "▸ ") + Title;
         _title.TextColor = NVTheme.Current.Ink;
-        _body.TextColor = NVTheme.Current.Muted;
-        _body.IsVisible = IsExpanded;
+        _fallback.TextColor = NVTheme.Current.Muted;
+        _panel.IsVisible = IsExpanded;
     }
 }
 
@@ -97,8 +104,11 @@ public class NVTabView : ThemeAwareView
     {
         _tabs.Items = Tabs;
         _tabs.SelectedIndex = SelectedIndex;
-        _body.Text = Tabs is { Count: > 0 } ? Tabs[Math.Clamp(SelectedIndex, 0, Tabs.Count - 1)] : "";
-        _body.TextColor = NVTheme.Current.Muted;
+        var name = Tabs is { Count: > 0 } ? Tabs[Math.Clamp(SelectedIndex, 0, Tabs.Count - 1)] : "";
+        _body.Text = string.IsNullOrEmpty(name) ? "" : $"{name} panel";
+        _body.TextColor = NVTheme.Current.Ink;
+        _body.Padding = new Thickness(NVTokens.Space3);
+        _body.BackgroundColor = NVTheme.Current.Mist;
     }
 }
 
@@ -106,16 +116,24 @@ public class NVBottomNavigation : NVTabView { }
 public class NVNavigationDrawer : ThemeAwareView
 {
     public static readonly BindableProperty ItemsProperty = BindableProperty.Create(nameof(Items), typeof(IList<string>), typeof(NVNavigationDrawer), new List<string> { "Home", "Settings" }, propertyChanged: Refresh);
-    readonly VerticalStackLayout _list = new() { Spacing = NVTokens.Space2 };
+    public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem), typeof(string), typeof(NVNavigationDrawer), "Home", BindingMode.TwoWay, propertyChanged: Refresh);
+    readonly VerticalStackLayout _list = new() { Spacing = NVTokens.Space1 };
     public NVNavigationDrawer() { Content = _list; ApplyTheme(); }
     public IList<string> Items { get => (IList<string>)GetValue(ItemsProperty); set => SetValue(ItemsProperty, value); }
+    public string SelectedItem { get => (string)GetValue(SelectedItemProperty); set => SetValue(SelectedItemProperty, value); }
     static void Refresh(BindableObject b, object o, object n) => ((NVNavigationDrawer)b).ApplyTheme();
     protected override void ApplyTheme()
     {
         _list.Children.Clear();
         foreach (var item in Items ?? [])
         {
-            _list.Children.Add(new Label { Text = item, TextColor = NVTheme.Current.Ink, FontFamily = NVTokens.FontRegular, Padding = NVTokens.Space2 });
+            var pick = item;
+            var tile = new NVListTile { Title = pick, Kind = NVIconKind.Home };
+            tile.BackgroundColor = pick == SelectedItem ? NVTheme.Current.Mist : Colors.Transparent;
+            var tap = new TapGestureRecognizer();
+            tap.Tapped += (_, _) => SelectedItem = pick;
+            tile.GestureRecognizers.Add(tap);
+            _list.Children.Add(tile);
         }
     }
 }
@@ -177,13 +195,32 @@ public class NVCarousel : ThemeAwareView
 {
     public static readonly BindableProperty ItemsProperty = BindableProperty.Create(nameof(Items), typeof(IList<string>), typeof(NVCarousel), new List<string> { "A", "B", "C" }, propertyChanged: Refresh);
     public static readonly BindableProperty IndexProperty = BindableProperty.Create(nameof(Index), typeof(int), typeof(NVCarousel), 0, BindingMode.TwoWay, propertyChanged: Refresh);
-    readonly Label _label = new() { FontFamily = NVTokens.FontSemiBold, HorizontalTextAlignment = TextAlignment.Center };
+    readonly NVCard _card = new();
+    readonly NVDotIndicator _dots = new();
     public NVCarousel()
     {
+        var prev = new NVIconButton { Kind = NVIconKind.ChevronRight, Rotation = 180 };
+        var next = new NVIconButton { Kind = NVIconKind.ChevronRight };
+        prev.Command = new Command(() => Index = Math.Max(0, Index - 1));
+        next.Command = new Command(() => Index = Math.Min(Index + 1, Math.Max(0, (Items?.Count ?? 1) - 1)));
         var swipe = new SwipeGestureRecognizer { Direction = SwipeDirection.Left };
         swipe.Swiped += (_, _) => Index = Math.Min(Index + 1, Math.Max(0, (Items?.Count ?? 1) - 1));
         GestureRecognizers.Add(swipe);
-        Content = new NVCard();
+        Content = new VerticalStackLayout
+        {
+            Spacing = NVTokens.Space2,
+            Children =
+            {
+                new Grid
+                {
+                    ColumnDefinitions = new ColumnDefinitionCollection { new(GridLength.Auto), new(GridLength.Star), new(GridLength.Auto) },
+                    Children = { prev, _card, next }
+                },
+                _dots
+            }
+        };
+        Grid.SetColumn(_card, 1);
+        Grid.SetColumn(next, 2);
         ApplyTheme();
     }
     public IList<string> Items { get => (IList<string>)GetValue(ItemsProperty); set => SetValue(ItemsProperty, value); }
@@ -192,7 +229,10 @@ public class NVCarousel : ThemeAwareView
     protected override void ApplyTheme()
     {
         var text = Items is { Count: > 0 } ? Items[Math.Clamp(Index, 0, Items.Count - 1)] : "";
-        Content = new NVCard { Title = text, Body = $"{Index + 1} / {Items?.Count ?? 0}" };
+        _card.Title = text;
+        _card.Body = $"{Index + 1} / {Items?.Count ?? 0}";
+        _dots.Count = Math.Max(1, Items?.Count ?? 1);
+        _dots.Index = Index;
     }
 }
 
@@ -254,23 +294,43 @@ public class NVDockLayout : ThemeAwareView
 public class NVRadialMenu : ThemeAwareView
 {
     public static readonly BindableProperty ItemsProperty = BindableProperty.Create(nameof(Items), typeof(IList<string>), typeof(NVRadialMenu), new List<string> { "Edit", "Share", "Delete" }, propertyChanged: Refresh);
-    readonly HorizontalStackLayout _row = new() { Spacing = NVTokens.Space2 };
-    public NVRadialMenu() { Content = _row; ApplyTheme(); }
+    readonly AbsoluteLayout _abs = new() { HeightRequest = 180, WidthRequest = 180 };
+    public NVRadialMenu() { Content = _abs; ApplyTheme(); }
     public IList<string> Items { get => (IList<string>)GetValue(ItemsProperty); set => SetValue(ItemsProperty, value); }
     static void Refresh(BindableObject b, object o, object n) => ((NVRadialMenu)b).ApplyTheme();
     protected override void ApplyTheme()
     {
-        _row.Children.Clear();
-        foreach (var item in Items ?? [])
+        _abs.Children.Clear();
+        var items = (Items ?? []).ToList();
+        var center = new NVFloatingActionButton();
+        AbsoluteLayout.SetLayoutBounds(center, new Rect(70, 70, 40, 40));
+        _abs.Children.Add(center);
+        for (var i = 0; i < items.Count; i++)
         {
-            _row.Children.Add(new NVChip { Text = item });
+            var angle = i * Math.PI * 2 / Math.Max(1, items.Count) - Math.PI / 2;
+            var chip = new NVChip { Text = items[i] };
+            AbsoluteLayout.SetLayoutBounds(chip, new Rect(70 + 62 * Math.Cos(angle), 70 + 62 * Math.Sin(angle), 80, 32));
+            _abs.Children.Add(chip);
         }
     }
 }
 
 public class NVBottomSheet : OverlayHost
 {
-    public NVBottomSheet() => Placement = OverlayPlacement.Bottom;
+    public NVBottomSheet()
+    {
+        Placement = OverlayPlacement.Bottom;
+        PanelContent = new VerticalStackLayout
+        {
+            Spacing = NVTokens.Space3,
+            Children =
+            {
+                new NVHeading { Text = "Sheet" },
+                new NVBodyText { Text = "Detent over the current page." },
+                new NVButton { Text = "Done", Variant = NVButtonVariant.Filled, Command = new Command(() => IsOpen = false) }
+            }
+        };
+    }
 }
 
 public class NVNavigationView : ThemeAwareView
@@ -289,7 +349,7 @@ public class NVNavigationView : ThemeAwareView
             Children = { _drawer }
         };
         Grid.SetColumn(_drawer, 0);
-        var body = new VerticalStackLayout { Children = { _bar, new NVEmptyView { Title = "Adaptive rail" } } };
+        var body = new VerticalStackLayout { Children = { _bar, new NVCard { Title = "Home", Body = "Adaptive rail — drawer on phone, rail on tablet." } } };
         Grid.SetColumn(body, 1);
         ((Grid)Content).Add(body);
         ApplyTheme();
@@ -316,7 +376,36 @@ public class NVWrapLayout : ThemeAwareView
 
 public class NVGridSplitter : ThemeAwareView
 {
-    readonly BoxView _bar = new() { WidthRequest = 6 };
-    public NVGridSplitter() { Content = _bar; ApplyTheme(); }
-    protected override void ApplyTheme() => _bar.Color = NVTheme.Current.Fog;
+    public static readonly BindableProperty OffsetProperty = BindableProperty.Create(nameof(Offset), typeof(double), typeof(NVGridSplitter), 140d, BindingMode.TwoWay, propertyChanged: Refresh);
+    readonly BoxView _bar = new() { WidthRequest = 8 };
+    readonly NVCard _left = new() { Title = "Left", Body = "Pane" };
+    readonly NVCard _right = new() { Title = "Right", Body = "Pane" };
+    readonly Grid _grid = new();
+    public NVGridSplitter()
+    {
+        _grid.ColumnDefinitions = new ColumnDefinitionCollection { new(new GridLength(140)), new(GridLength.Auto), new(GridLength.Star) };
+        var pan = new PanGestureRecognizer();
+        pan.PanUpdated += (_, e) =>
+        {
+            if (e.StatusType == GestureStatus.Running)
+            {
+                Offset = Math.Clamp(Offset + e.TotalX / 8, 80, 240);
+            }
+        };
+        _bar.GestureRecognizers.Add(pan);
+        _grid.Add(_left);
+        Grid.SetColumn(_bar, 1);
+        _grid.Add(_bar);
+        Grid.SetColumn(_right, 2);
+        _grid.Add(_right);
+        Content = _grid;
+        ApplyTheme();
+    }
+    public double Offset { get => (double)GetValue(OffsetProperty); set => SetValue(OffsetProperty, value); }
+    static void Refresh(BindableObject b, object o, object n) => ((NVGridSplitter)b).ApplyTheme();
+    protected override void ApplyTheme()
+    {
+        _bar.Color = NVTheme.Current.Fog;
+        _grid.ColumnDefinitions[0] = new ColumnDefinition(new GridLength(Offset));
+    }
 }

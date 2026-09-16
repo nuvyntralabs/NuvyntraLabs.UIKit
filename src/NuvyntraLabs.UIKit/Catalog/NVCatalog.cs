@@ -60,7 +60,14 @@ public static class NVCatalog
         typeof(NVWebView), typeof(NVVoiceNote), typeof(NVWaveform), typeof(NVBeforeAfter),
         typeof(NVMasterDetail), typeof(NVRetryView), typeof(NVOfflineBanner), typeof(NVPermissionCard),
         typeof(NVForceUpdate), typeof(NVLockPad), typeof(NVBiometricGate), typeof(NVDashboardGrid),
-        typeof(NVGantt), typeof(NVOrgChart)
+        typeof(NVGantt), typeof(NVOrgChart),
+        typeof(NVCommandPalette), typeof(NVCoachMark), typeof(NVContextMenu), typeof(NVFileDrop),
+        typeof(NVPaywall), typeof(NVWhatsNew), typeof(NVConsentBanner), typeof(NVHeatCalendar),
+        typeof(NVSpeedDial), typeof(NVSubscriptionCard), typeof(NVEmojiPicker),
+        typeof(NVPivotGrid), typeof(NVPropertyGrid), typeof(NVJsonTree),
+        typeof(NVDiffView), typeof(NVCodeEditor),
+        typeof(NVCallBar), typeof(NVInCallView), typeof(NVSyncConflictCard), typeof(NVUploadTile),
+        typeof(NVDeviceSheet), typeof(NVPrintPreview), typeof(NVNfcPrompt), typeof(NVReviewPrompt)
     ];
 
     public static IReadOnlyList<Type> Helpers { get; } =
@@ -84,7 +91,10 @@ public static class NVCatalog
         typeof(NVStatusView), typeof(NVSettingsView), typeof(NVHelpView), typeof(NVNotificationsView),
         typeof(NVDeliveryTrackView), typeof(NVAddressBookView), typeof(NVBookingView), typeof(NVDashboardView),
         typeof(NVPinLockView), typeof(NVForceUpdateView), typeof(NVSearchResultsView), typeof(NVFilterSheetView),
-        typeof(NVMediaPlayerView), typeof(NVSplitInboxView), typeof(NVOnboardingPermissionsView), typeof(NVOrderSummaryView)
+        typeof(NVMediaPlayerView), typeof(NVSplitInboxView), typeof(NVOnboardingPermissionsView), typeof(NVOrderSummaryView),
+        typeof(NVInvoiceView), typeof(NVReceiptView), typeof(NVCompareView), typeof(NVStoreLocatorView),
+        typeof(NVSubscriptionView), typeof(NVWhatsNewView),
+        typeof(NVConflictResolveView), typeof(NVCallView), typeof(NVAddressFormView)
     ];
 
     public static IReadOnlyList<string> ControlNames => Controls.Select(t => t.Name).ToArray();

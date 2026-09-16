@@ -73,7 +73,12 @@ public class NVStepProgressBar : ThemeAwareView
 public class NVBusyIndicator : ThemeAwareView
 {
     readonly ActivityIndicator _spin = new() { IsRunning = true };
-    public NVBusyIndicator() { Content = _spin; ApplyTheme(); }
+    readonly NVCaptionText _label = new() { Text = "Working…" };
+    public NVBusyIndicator()
+    {
+        Content = new HorizontalStackLayout { Spacing = NVTokens.Space2, Children = { _spin, _label } };
+        ApplyTheme();
+    }
     protected override void ApplyTheme() => _spin.Color = NVTheme.Current.Accent;
 }
 
@@ -87,7 +92,7 @@ public class NVPullToRefresh : ThemeAwareView
     {
         _refresh.Content = new ScrollView
         {
-            Content = new Label { Text = "Pull to refresh", FontFamily = NVTokens.FontRegular }
+            Content = new NVCollectionView { Items = [new NVListItem { Title = "Aurora", Subtitle = "Pull to refresh" }, new NVListItem { Title = "Paper", Subtitle = "Latest" }] }
         };
         _refresh.Refreshing += (_, _) =>
         {
@@ -148,7 +153,20 @@ public class NVAlert : NVBanner
 
 public class NVPopup : OverlayHost
 {
-    public NVPopup() => Placement = OverlayPlacement.Center;
+    public NVPopup()
+    {
+        Placement = OverlayPlacement.Center;
+        PanelContent = new VerticalStackLayout
+        {
+            Spacing = NVTokens.Space3,
+            Children =
+            {
+                new NVHeading { Text = "Popup" },
+                new NVBodyText { Text = "Modal chrome over the current page." },
+                new NVButton { Text = "Close", Variant = NVButtonVariant.Filled, Command = new Command(() => IsOpen = false) }
+            }
+        };
+    }
 }
 
 public class NVEmptyView : ThemeAwareView
@@ -159,7 +177,12 @@ public class NVEmptyView : ThemeAwareView
     readonly Label _body = new() { FontFamily = NVTokens.FontRegular };
     public NVEmptyView()
     {
-        Content = new VerticalStackLayout { Spacing = NVTokens.Space2, Children = { _title, _body } };
+        Content = new VerticalStackLayout
+        {
+            Spacing = NVTokens.Space2,
+            HorizontalOptions = LayoutOptions.Center,
+            Children = { new NVIcon { Kind = NVIconKind.Info }, _title, _body }
+        };
         ApplyTheme();
     }
     public string Title { get => (string)GetValue(TitleProperty); set => SetValue(TitleProperty, value); }
@@ -169,7 +192,13 @@ public class NVEmptyView : ThemeAwareView
     {
         _title.Text = Title;
         _title.TextColor = NVTheme.Current.Ink;
-        _body.Text = Reason.ToString();
+        _body.Text = Reason switch
+        {
+            NVStatusReason.Offline => "Reconnect to continue.",
+            NVStatusReason.EmptyCart => "Your cart is empty.",
+            NVStatusReason.NoPhotos => "No photos yet.",
+            _ => Reason.ToString()
+        };
         _body.TextColor = NVTheme.Current.Muted;
     }
 }

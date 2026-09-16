@@ -91,11 +91,25 @@ public class NVTextField : ThemeAwareView
 
     public bool HasError => !string.IsNullOrWhiteSpace(Error);
 
+    protected virtual string NormalizeText(string value) => value;
+
     static void OnTextChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        if (bindable is NVTextField field && field._entry.Text != (newValue as string ?? string.Empty))
+        if (bindable is not NVTextField field)
         {
-            field._entry.Text = newValue as string ?? string.Empty;
+            return;
+        }
+
+        var next = field.NormalizeText(newValue as string ?? string.Empty);
+        if (next != (newValue as string ?? string.Empty))
+        {
+            field.Text = next;
+            return;
+        }
+
+        if (field._entry.Text != next)
+        {
+            field._entry.Text = next;
         }
     }
 

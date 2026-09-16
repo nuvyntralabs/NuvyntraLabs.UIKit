@@ -1,5 +1,6 @@
 namespace NuvyntraLabs.UIKit.Tests;
 
+[Collection("UIKit")]
 public class NVLogicTests
 {
     [Theory]
@@ -84,5 +85,43 @@ public class NVLogicTests
     public void Chart_series_kinds_are_complete()
     {
         Assert.Equal(17, Enum.GetValues<NVChartSeriesKind>().Length);
+    }
+
+    [Fact]
+    public void Grid_logic_filters_sorts_pages_and_copies()
+    {
+        var rows = new List<IDictionary<string, object?>>
+        {
+            new Dictionary<string, object?> { ["name"] = "Cora", ["n"] = 3 },
+            new Dictionary<string, object?> { ["name"] = "Ada", ["n"] = 1 }
+        };
+        Assert.Equal(NVSortDirection.Ascending, NVGridLogic.Cycle(NVSortDirection.None));
+        Assert.Single(NVGridLogic.Filter(rows, "ada"));
+        Assert.Equal("Ada", NVGridLogic.Sort(rows, "name", NVSortDirection.Ascending)[0]["name"]);
+        Assert.Single(NVGridLogic.Page(rows, 1, 1));
+        Assert.NotSame(rows[0], NVGridLogic.Copy(rows[0]));
+    }
+
+    [Fact]
+    public void Chart_logic_maps_empty_and_ohlc()
+    {
+        Assert.True(NVChartLogic.IsEmpty(null));
+        Assert.True(NVChartLogic.IsEmpty([]));
+        var series = new NVChartSeries
+        {
+            Kind = NVChartSeriesKind.Candle,
+            Points = [new NVChartPoint { Y = 1, Close = 4, Label = "Open" }]
+        };
+        Assert.Equal(4, NVChartLogic.Map(series)[0].Y);
+        Assert.False(NVChartLogic.IsEmpty([series]));
+    }
+
+    [Fact]
+    public void Barcode_codec_builds_bars_and_qr()
+    {
+        Assert.True(NVBarcodeCodec.Code128Bars("A").Count >= 7);
+        var qr = NVBarcodeCodec.QrMatrix("kit");
+        Assert.Equal(21, qr.GetLength(0));
+        Assert.True(qr[0, 0]);
     }
 }

@@ -23,7 +23,7 @@ Registration: `UseNuvyntraUIKit()` — see README.md.
 Prefix: NV (NVCheckBox, NVRadioButton)
 Xmlns: http://nuvyntralabs.com/uikit → nv
 Theme: NVTheme.Current / Lumina
-Scope: 177 controls (basics → advanced) + 57 NV*View recipes + NVRadioGroup + NVFormField
+Scope: 201 controls (basics → advanced + 1.2 / 1.3 chrome; 1.4 deepens list / grid / chart / calendar / media) + 66 NV*View recipes + NVRadioGroup + NVFormField
 
 ## Use this project when a developer is looking for
 

@@ -76,11 +76,30 @@ Page recipes are `ContentView`s you can drop onto a `ContentPage`:
 <nv:NVSignInView />
 <nv:NVCartView />
 <nv:NVDashboardView />
+<nv:NVInvoiceView />
+```
+
+```csharp
+var palette = new NVCommandPalette
+{
+    Recents = [new NVCommandItem { Title = "Toggle theme" }],
+    Commands = [new NVCommandItem { Title = "Open file", Command = new Command(() => { }) }]
+};
+palette.Query = "open"; // case-insensitive; empty query shows Recents
+
+var consent = new NVConsentBanner { Text = "We use cookies to keep Lumina useful." };
+consent.Accept(); // sets IsAccepted
+
+var heat = new NVHeatCalendar
+{
+    Month = new DateTime(2026, 9, 1),
+    Values = [new NVHeatDay { Date = new DateTime(2026, 9, 3), Value = 4 }]
+};
 ```
 
 ## What you get
 
-177 controls + 57 page recipes + helpers `NVRadioGroup` and `NVFormField`. Basics through advanced — one kit for a typical mobile app.
+201 controls + 66 page recipes + helpers `NVRadioGroup` and `NVFormField`. Basics through advanced, plus 1.2 / 1.3 chrome. 1.4 deepens lists, grids, charts, calendar, and media — one kit for a typical mobile app.
 
 | Layer | Types |
 | --- | --- |
@@ -91,7 +110,8 @@ Page recipes are `ContentView`s you can drop onto a `ContentPage`:
 | Data / viz | `NVDataGrid`, `NVChart`, `NVCalendar`, `NVKanban`, `NVGantt`, … |
 | Social / media | `NVChat`, `NVComposer`, `NVVideoPlayer`, `NVWebView`, `NVPdfViewer`, … |
 | Advanced | `NVMasterDetail`, `NVLockPad`, `NVBiometricGate`, `NVWizard`, `NVTicket`, … |
-| Pages | `NVSignInView` … `NVOrderSummaryView` |
+| Next (1.2 / 1.3) | `NVCommandPalette`, `NVSpeedDial`, `NVPivotGrid`, `NVDiffView`, `NVCallBar`, `NVReviewPrompt`, … |
+| Pages | `NVSignInView` … `NVAddressFormView` |
 
 XAML + property list: [UIKitLib.md](UIKitLib.md). Full IDs: [nuvyntralabs-uikit-components.md](https://github.com/nuvyntralabs/MauiEssentials/blob/main/docs/plans/nuvyntralabs-uikit-components.md).
 
@@ -99,7 +119,7 @@ Kit-level 1.0: working Lumina APIs, not Telerik/Syncfusion parity. PDF / Docx / 
 
 ## Sample
 
-`samples/NuvyntraLabs.UIKit.Sample` is a MAUI Shell flyout: Theme through Media, plus Basics, Advanced, and every page recipe.
+`samples/NuvyntraLabs.UIKit.Sample` is a MAUI Shell flyout: Theme through Media, plus Basics, Advanced, Next (1.2), and every page recipe.
 
 ```bash
 dotnet build src/NuvyntraLabs.UIKit/NuvyntraLabs.UIKit.csproj
@@ -114,7 +134,7 @@ dotnet build samples/NuvyntraLabs.UIKit.Sample/NuvyntraLabs.UIKit.Sample.csproj 
 dotnet pack src/NuvyntraLabs.UIKit/NuvyntraLabs.UIKit.csproj -c Release -o artifacts
 ```
 
-The `.nupkg` is written to `artifacts/NuvyntraLabs.UIKit.1.0.0.nupkg`. Publishing to nuget.org and GitHub Packages is pipeline-only.
+The `.nupkg` is written to `artifacts/NuvyntraLabs.UIKit.1.4.0.nupkg`. Publishing to nuget.org and GitHub Packages is pipeline-only.
 
 ## Platform support
 

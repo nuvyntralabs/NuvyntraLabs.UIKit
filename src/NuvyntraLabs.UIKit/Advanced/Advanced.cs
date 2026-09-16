@@ -2,10 +2,17 @@ namespace NuvyntraLabs.UIKit;
 
 public class NVMasterDetail : ThemeAwareView
 {
-    readonly NVNavigationDrawer _master = new() { Items = new List<string> { "Inbox", "Starred", "Sent" } };
-    readonly NVCard _detail = new() { Title = "Detail", Body = "Two-pane / phone stack" };
+    readonly NVNavigationDrawer _master = new() { Items = new List<string> { "Inbox", "Starred", "Sent" }, SelectedItem = "Inbox" };
+    readonly NVCard _detail = new();
     public NVMasterDetail()
     {
+        _master.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(NVNavigationDrawer.SelectedItem))
+            {
+                ApplyTheme();
+            }
+        };
         Content = new Grid
         {
             ColumnDefinitions = new ColumnDefinitionCollection { new(new GridLength(200)), new(GridLength.Star) },
@@ -15,7 +22,11 @@ public class NVMasterDetail : ThemeAwareView
         ((Grid)Content).Add(_detail);
         ApplyTheme();
     }
-    protected override void ApplyTheme() { }
+    protected override void ApplyTheme()
+    {
+        _detail.Title = _master.SelectedItem;
+        _detail.Body = $"Showing {_master.SelectedItem.ToLowerInvariant()} in the detail pane.";
+    }
 }
 
 public class NVRetryView : NVEmptyView
@@ -92,10 +103,12 @@ public class NVDashboardGrid : ThemeAwareView
 {
     public NVDashboardGrid()
     {
-        Content = new NVWrapLayout
+        var grid = new FlexLayout { Wrap = Microsoft.Maui.Layouts.FlexWrap.Wrap };
+        foreach (var (label, value) in new[] { ("Revenue", "$48k"), ("Orders", "128"), ("NPS", "72"), ("Uptime", "99.9%") })
         {
-            Items = new List<string> { "Revenue", "Orders", "NPS", "Uptime" }
-        };
+            grid.Children.Add(new NVStatCard { Label = label, Value = value, WidthRequest = 140 });
+        }
+        Content = grid;
         ApplyTheme();
     }
     protected override void ApplyTheme() { }
@@ -103,18 +116,25 @@ public class NVDashboardGrid : ThemeAwareView
 
 public class NVGantt : ThemeAwareView
 {
-    readonly NVTimeline _timeline = new();
-    public NVGantt()
+    readonly VerticalStackLayout _rows = new() { Spacing = NVTokens.Space2 };
+    public NVGantt() { Content = _rows; ApplyTheme(); }
+    protected override void ApplyTheme()
     {
-        _timeline.Items =
-        [
-            new NVTimelineItem { Title = "Design", Detail = "3d", At = DateTime.Today },
-            new NVTimelineItem { Title = "Build", Detail = "5d", At = DateTime.Today.AddDays(3) }
-        ];
-        Content = _timeline;
-        ApplyTheme();
+        _rows.Children.Clear();
+        foreach (var (title, start, width) in new[] { ("Design", 0, 90), ("Build", 80, 140), ("Ship", 200, 70) })
+        {
+            var bar = new BoxView { HeightRequest = 16, WidthRequest = width, Color = NVTheme.Current.Accent, HorizontalOptions = LayoutOptions.Start };
+            _rows.Children.Add(new VerticalStackLayout
+            {
+                Spacing = 2,
+                Children =
+                {
+                    new NVCaptionText { Text = title },
+                    new Grid { Children = { new BoxView { Color = NVTheme.Current.Mist, HeightRequest = 16 }, new HorizontalStackLayout { Children = { new BoxView { WidthRequest = start, Color = Colors.Transparent }, bar } } } }
+                }
+            });
+        }
     }
-    protected override void ApplyTheme() { }
 }
 
 public class NVOrgChart : NVTreeView

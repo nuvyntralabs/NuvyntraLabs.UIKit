@@ -52,7 +52,11 @@ public class NVImage : ThemeAwareView
     {
         _image.Source = Source;
         _image.BackgroundColor = NVTheme.Current.Mist;
-        _caption.Text = string.IsNullOrWhiteSpace(Caption) ? (Source is null ? "Image" : "") : Caption;
+        if (Source is null)
+        {
+            _image.Source = null;
+        }
+        _caption.Text = string.IsNullOrWhiteSpace(Caption) ? (Source is null ? "Image placeholder" : "") : Caption;
         _caption.TextColor = NVTheme.Current.Muted;
         _caption.IsVisible = !string.IsNullOrWhiteSpace(_caption.Text);
     }

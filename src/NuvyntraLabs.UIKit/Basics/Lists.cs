@@ -102,12 +102,30 @@ public class NVGroupedList : ThemeAwareView
 
 public class NVIndexBar : ThemeAwareView
 {
-    readonly Label _label = new() { FontFamily = NVTokens.FontRegular, FontSize = NVTokens.CaptionSize };
-    public NVIndexBar() { Content = _label; ApplyTheme(); }
+    public static readonly BindableProperty SelectedProperty = BindableProperty.Create(nameof(Selected), typeof(string), typeof(NVIndexBar), "A", BindingMode.TwoWay, propertyChanged: Refresh);
+    readonly VerticalStackLayout _col = new() { Spacing = 0 };
+    public NVIndexBar() { Content = _col; ApplyTheme(); }
+    public string Selected { get => (string)GetValue(SelectedProperty); set => SetValue(SelectedProperty, value); }
+    static void Refresh(BindableObject b, object o, object n) => ((NVIndexBar)b).ApplyTheme();
     protected override void ApplyTheme()
     {
-        _label.Text = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z";
-        _label.TextColor = NVTheme.Current.Muted;
+        _col.Children.Clear();
+        foreach (var letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+        {
+            var pick = letter.ToString();
+            var label = new Label
+            {
+                Text = pick,
+                FontFamily = NVTokens.FontSemiBold,
+                FontSize = NVTokens.CaptionSize,
+                TextColor = pick == Selected ? NVTheme.Current.Accent : NVTheme.Current.Muted,
+                HorizontalTextAlignment = TextAlignment.Center
+            };
+            var tap = new TapGestureRecognizer();
+            tap.Tapped += (_, _) => Selected = pick;
+            label.GestureRecognizers.Add(tap);
+            _col.Children.Add(label);
+        }
     }
 }
 
