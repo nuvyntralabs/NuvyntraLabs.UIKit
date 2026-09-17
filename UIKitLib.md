@@ -7,7 +7,7 @@
 - Docs: https://nuvyntralabs.github.io/packages/nuvyntralabs-uikit/
 - Catalog: [MauiEssentials](https://github.com/nuvyntralabs/MauiEssentials)
 
-Package: `NuvyntraLabs.UIKit` · Prefix: `NV` · Version: `1.4.0`
+Package: `NuvyntraLabs.UIKit` · Prefix: `NV` · Version: `1.5.0`
 
 Human + agent overview: [README.md](README.md). IDs: [nuvyntralabs-uikit-components.md](https://github.com/nuvyntralabs/MauiEssentials/blob/main/docs/plans/nuvyntralabs-uikit-components.md).
 
@@ -1070,12 +1070,12 @@ Chrome with no extra bindables (fixed demo content).
 
 ## Forms plus
 
-### NVEmailField / NVPhoneField / NVPasswordField / NVCouponField / NVQuantityStepper
+### NVInputField / NVPhoneField / NVPasswordField / NVCouponField / NVQuantityStepper
 
-Specialized `NVTextField` / `NVMaskedEntry` / `NVNumericUpDown`. No new property names beyond inherited + `NVPhoneField.Mask`.
+Specialized `NVTextField` / `NVMaskedEntry` / `NVNumericUpDown`. No new property names beyond inherited + `NVPhoneField.Mask`. `NVInputField` is the generic labeled input (`NVEmailField` was renamed in 1.5.0).
 
 ```xml
-<nv:NVEmailField Text="{Binding Email}" />
+<nv:NVInputField Label="Email" Text="{Binding Email}" />
 <nv:NVPasswordField Text="{Binding Secret}" />
 <nv:NVQuantityStepper Value="1" />
 ```

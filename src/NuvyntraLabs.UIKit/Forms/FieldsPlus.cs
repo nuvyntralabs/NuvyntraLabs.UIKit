@@ -1,12 +1,8 @@
 namespace NuvyntraLabs.UIKit;
 
-public class NVEmailField : NVTextField
+/// <summary>Labeled single-line input. Same surface as <see cref="NVTextField"/>; set <see cref="NVTextField.Label"/> for email, name, or any other field.</summary>
+public class NVInputField : NVTextField
 {
-    public NVEmailField()
-    {
-        Label = "Email";
-        Placeholder = "you@studio.dev";
-    }
 }
 
 public class NVPhoneField : NVMaskedEntry

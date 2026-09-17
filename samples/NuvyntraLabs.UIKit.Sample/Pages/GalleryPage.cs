@@ -277,7 +277,7 @@ public sealed class AdvancedPage : CatalogSectionPage
         () =>
         [
             Gallery.Chapter("Fields and pickers"),
-            Gallery.Sample(1, "NVEmailField", "Email", new NVEmailField()),
+            Gallery.Sample(1, "NVInputField", "Labeled input", new NVInputField { Label = "Name", Placeholder = "Ada" }),
             Gallery.Sample(2, "NVPhoneField", "Phone mask", new NVPhoneField()),
             Gallery.Sample(3, "NVPasswordField", "Secret", new NVPasswordField()),
             Gallery.Sample(4, "NVPasswordStrength", "Score 4 / 4", new NVPasswordStrength { Password = "Longenough1!" }),

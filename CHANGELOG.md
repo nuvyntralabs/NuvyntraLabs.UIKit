@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.0
+
+- Rename `NVEmailField` → `NVInputField`. The type is a generic labeled input; set `Label` / `Placeholder` for email or any other field. Breaking if you referenced `NVEmailField`.
+
 ## 1.4.0
 
 - Deepen existing 1.0 types (no new catalog names)

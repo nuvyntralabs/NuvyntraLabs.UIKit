@@ -83,8 +83,8 @@ static class PreviewCatalog
                 card.Body = "Warm paper";
                 break;
             case NVTextField field when string.IsNullOrWhiteSpace(field.Text) && string.IsNullOrWhiteSpace(field.Placeholder):
-                field.Label = string.IsNullOrWhiteSpace(field.Label) ? "Email" : field.Label;
-                field.Placeholder = "you@studio.dev";
+                field.Label = string.IsNullOrWhiteSpace(field.Label) ? "Label" : field.Label;
+                field.Placeholder = "Type here";
                 break;
             case NVChip chip when string.IsNullOrWhiteSpace(chip.Text):
                 chip.Text = "Filter";

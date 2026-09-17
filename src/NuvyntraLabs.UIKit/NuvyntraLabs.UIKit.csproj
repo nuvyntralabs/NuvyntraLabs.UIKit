@@ -34,9 +34,9 @@
     <PackageProjectUrl>https://nuvyntralabs.github.io/uikit/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nuvyntralabs/NuvyntraLabs.UIKit</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.4.0</Version>
-    <PackageVersion>1.4.0</PackageVersion>
-    <PackageReleaseNotes>1.4.0: Deepen 1.0 types — virtualized lists, sort/filter/freeze/page grid, drawn chart series and barcodes, calendar multi-select, scheduler recurrence, PDF zoom/search, image rotate/crop/annotate, chat stream + attach. No new catalog names.</PackageReleaseNotes>
+    <Version>1.5.0</Version>
+    <PackageVersion>1.5.0</PackageVersion>
+    <PackageReleaseNotes>1.5.0: Rename NVEmailField to NVInputField (generic labeled input; set Label for email or any other field).</PackageReleaseNotes>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

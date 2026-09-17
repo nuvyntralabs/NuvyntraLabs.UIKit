@@ -105,7 +105,7 @@ var heat = new NVHeatCalendar
 | --- | --- |
 | Foundation | `NVTheme`, `NVTokens`, `NVTypography`, `NVIcons`, `NVMotion`, `NVDensity`, `NVVisualState`, `NVAccessibility` |
 | Basics | `NVHeading`, `NVListTile`, `NVAppScaffold`, `NVFloatingActionButton`, `NVDialog`, `NVImage`, … |
-| Forms | `NVTextField`, `NVEmailField`, `NVPasswordStrength`, `NVPinPad`, `NVDateRangePicker`, … |
+| Forms | `NVTextField`, `NVInputField`, `NVPasswordStrength`, `NVPinPad`, `NVDateRangePicker`, … |
 | Feedback / nav | `NVBanner`, `NVEmptyView`, `NVTabView`, `NVBottomSheet`, `NVNavigationView`, … |
 | Data / viz | `NVDataGrid`, `NVChart`, `NVCalendar`, `NVKanban`, `NVGantt`, … |
 | Social / media | `NVChat`, `NVComposer`, `NVVideoPlayer`, `NVWebView`, `NVPdfViewer`, … |
@@ -134,7 +134,7 @@ dotnet build samples/NuvyntraLabs.UIKit.Sample/NuvyntraLabs.UIKit.Sample.csproj 
 dotnet pack src/NuvyntraLabs.UIKit/NuvyntraLabs.UIKit.csproj -c Release -o artifacts
 ```
 
-The `.nupkg` is written to `artifacts/NuvyntraLabs.UIKit.1.4.0.nupkg`. Publishing to nuget.org and GitHub Packages is pipeline-only.
+The `.nupkg` is written to `artifacts/NuvyntraLabs.UIKit.1.5.0.nupkg`. Publishing to nuget.org and GitHub Packages is pipeline-only.
 
 ## Platform support
 

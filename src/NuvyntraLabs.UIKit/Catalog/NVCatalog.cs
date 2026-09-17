@@ -45,7 +45,7 @@ public static class NVCatalog
         typeof(NVListTile), typeof(NVSettingsTile), typeof(NVChipGroup), typeof(NVCheckList),
         typeof(NVGroupedList), typeof(NVIndexBar), typeof(NVSwipeTile), typeof(NVSelectionBar),
         typeof(NVSkeletonList), typeof(NVInfiniteFooter),
-        typeof(NVEmailField), typeof(NVPhoneField), typeof(NVPasswordField), typeof(NVPasswordStrength),
+        typeof(NVInputField), typeof(NVPhoneField), typeof(NVPasswordField), typeof(NVPasswordStrength),
         typeof(NVQuantityStepper), typeof(NVDateRangePicker), typeof(NVMonthYearPicker), typeof(NVFilterBar),
         typeof(NVTagInput), typeof(NVPinPad), typeof(NVCopyable), typeof(NVLink),
         typeof(NVCountryPicker), typeof(NVLanguagePicker), typeof(NVThemePicker),

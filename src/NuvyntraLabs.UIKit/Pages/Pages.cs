@@ -66,7 +66,7 @@ public class NVSocialSignInView : NVPageRecipe
                 new NVButton { Text = "Google", Variant = NVButtonVariant.Outline }
             }
         },
-        new NVEmailField(),
+        new NVInputField { Label = "Email", Placeholder = "you@studio.dev" },
         new NVPasswordField(),
         new NVButton { Text = "Continue", Variant = NVButtonVariant.Filled }) { }
 }
