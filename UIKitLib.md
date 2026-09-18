@@ -7,7 +7,7 @@
 - Docs: https://nuvyntralabs.github.io/packages/nuvyntralabs-uikit/
 - Catalog: [MauiEssentials](https://github.com/nuvyntralabs/MauiEssentials)
 
-Package: `NuvyntraLabs.UIKit` · Prefix: `NV` · Version: `1.5.0`
+Package: `NuvyntraLabs.UIKit` · Prefix: `NV` · Version: `1.5.1`
 
 Human + agent overview: [README.md](README.md). IDs: [nuvyntralabs-uikit-components.md](https://github.com/nuvyntralabs/MauiEssentials/blob/main/docs/plans/nuvyntralabs-uikit-components.md).
 
@@ -17,6 +17,11 @@ xmlns:nv="http://nuvyntralabs.com/uikit"
 
 ```csharp
 builder.UseMauiApp<App>().UseNuvyntraUIKit();
+
+NVTheme.Current.SetTypeScale(1);                    // 0.8–2.0; default 1
+NVTheme.Current.SetFlowDirection(FlowDirection.MatchParent);
+overlay.TryHandleKey("Escape");
+palette.TryHandleShortcut("Control+K");
 ```
 
 Every `NV*` view also inherits MAUI `ContentView` / `VisualElement` members (`IsVisible`, `IsEnabled`, `Margin`, `HorizontalOptions`, `BindingContext`, …). Those are **framework** properties and are not repeated below.

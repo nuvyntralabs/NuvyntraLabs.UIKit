@@ -29,7 +29,9 @@ public class NVCard : ThemeAwareView
         _title.Text = Title;
         _body.Text = Body;
         _title.TextColor = NVTheme.Current.Ink;
+        _title.FontSize = NVTokens.Type(NVTokens.TitleSize);
         _body.TextColor = NVTheme.Current.Muted;
+        _body.FontSize = NVTokens.Type(NVTokens.BodySize);
         if (Content is Border border)
         {
             border.BackgroundColor = NVTheme.Current.Surface;
@@ -67,7 +69,8 @@ public class NVExpander : ThemeAwareView
 
     protected override void ApplyTheme()
     {
-        _title.Text = (IsExpanded ? "▾ " : "▸ ") + Title;
+        _title.Text = NVIcons.Glyph(IsExpanded ? NVIconKind.ChevronDown : NVIconKind.ChevronRight, NVTheme.Current.FlowDirection) + " " + Title;
+        _title.FontSize = NVTokens.Type(NVTokens.TitleSize);
         _title.TextColor = NVTheme.Current.Ink;
         _fallback.TextColor = NVTheme.Current.Muted;
         _panel.IsVisible = IsExpanded;
@@ -155,6 +158,7 @@ public class NVToolbar : ThemeAwareView
     {
         _title.Text = Title;
         _title.TextColor = NVTheme.Current.Ink;
+        _title.FontSize = NVTokens.Type(NVTokens.TitleSize);
     }
 }
 
@@ -197,15 +201,17 @@ public class NVCarousel : ThemeAwareView
     public static readonly BindableProperty IndexProperty = BindableProperty.Create(nameof(Index), typeof(int), typeof(NVCarousel), 0, BindingMode.TwoWay, propertyChanged: Refresh);
     readonly NVCard _card = new();
     readonly NVDotIndicator _dots = new();
+    readonly SwipeGestureRecognizer _advanceSwipe;
     public NVCarousel()
     {
         var prev = new NVIconButton { Kind = NVIconKind.ChevronRight, Rotation = 180 };
         var next = new NVIconButton { Kind = NVIconKind.ChevronRight };
         prev.Command = new Command(() => Index = Math.Max(0, Index - 1));
         next.Command = new Command(() => Index = Math.Min(Index + 1, Math.Max(0, (Items?.Count ?? 1) - 1)));
-        var swipe = new SwipeGestureRecognizer { Direction = SwipeDirection.Left };
+        var swipe = new SwipeGestureRecognizer { Direction = NVTokens.AdvanceSwipe };
         swipe.Swiped += (_, _) => Index = Math.Min(Index + 1, Math.Max(0, (Items?.Count ?? 1) - 1));
         GestureRecognizers.Add(swipe);
+        _advanceSwipe = swipe;
         Content = new VerticalStackLayout
         {
             Spacing = NVTokens.Space2,
@@ -233,6 +239,7 @@ public class NVCarousel : ThemeAwareView
         _card.Body = $"{Index + 1} / {Items?.Count ?? 0}";
         _dots.Count = Math.Max(1, Items?.Count ?? 1);
         _dots.Index = Index;
+        _advanceSwipe.Direction = NVTokens.AdvanceSwipe;
     }
 }
 

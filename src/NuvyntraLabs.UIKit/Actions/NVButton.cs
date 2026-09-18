@@ -110,6 +110,8 @@ public class NVButton : ThemeAwareView
     {
         var theme = NVTheme.Current;
         _button.Text = Text;
+        _button.FontSize = NVTokens.Type(NVTokens.BodySize);
+        _button.MinimumHeightRequest = NVTokens.MinTap;
         switch (Variant)
         {
             case NVButtonVariant.Tonal:
@@ -132,7 +134,7 @@ public class NVButton : ThemeAwareView
                 break;
             case NVButtonVariant.Danger:
                 _button.BackgroundColor = theme.Danger;
-                _button.TextColor = theme.OnAccent;
+                _button.TextColor = theme.On(theme.Danger);
                 _button.BorderColor = Colors.Transparent;
                 _button.BorderWidth = 0;
                 break;

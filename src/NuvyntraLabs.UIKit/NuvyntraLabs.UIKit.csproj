@@ -34,9 +34,9 @@
     <PackageProjectUrl>https://nuvyntralabs.github.io/uikit/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nuvyntralabs/NuvyntraLabs.UIKit</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.5.0</Version>
-    <PackageVersion>1.5.0</PackageVersion>
-    <PackageReleaseNotes>1.5.0: Rename NVEmailField to NVInputField (generic labeled input; set Label for email or any other field).</PackageReleaseNotes>
+    <Version>1.5.1</Version>
+    <PackageVersion>1.5.1</PackageVersion>
+    <PackageReleaseNotes>1.5.1: Phase 7 harden — TypeScale 80–200%, RTL Start/End, contrast pairs, overlay Escape / Ctrl+K. No new catalog types.</PackageReleaseNotes>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

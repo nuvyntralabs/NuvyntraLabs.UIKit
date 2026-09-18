@@ -63,6 +63,7 @@ public class NVCheckBox : ThemeAwareView
         var theme = NVTheme.Current;
         _box.Color = theme.Accent;
         _label.TextColor = theme.Ink;
+        _label.FontSize = NVTokens.Type(NVTokens.BodySize);
         _label.Text = Text;
         _label.IsVisible = !string.IsNullOrWhiteSpace(Text);
         _box.IsChecked = IsChecked ?? false;

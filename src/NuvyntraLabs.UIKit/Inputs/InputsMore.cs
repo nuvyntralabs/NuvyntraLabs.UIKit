@@ -431,7 +431,7 @@ sealed class NVSignatureDrawable(List<PointF> points) : IDrawable
         if (points.Count == 0)
         {
             canvas.FontColor = NVTheme.Current.Muted;
-            canvas.FontSize = 14;
+            canvas.FontSize = (float)NVTokens.Type(14);
             canvas.DrawString("Sign here", dirty, HorizontalAlignment.Center, VerticalAlignment.Center);
             return;
         }
@@ -464,7 +464,7 @@ public class NVRating : ThemeAwareView
         for (var i = 1; i <= 5; i++)
         {
             var star = i;
-            var label = new Label { Text = i <= Value ? "★" : "☆", FontSize = 22, TextColor = NVTheme.Current.Accent };
+            var label = new Label { Text = i <= Value ? "★" : "☆", FontSize = NVTokens.Type(NVTokens.TitleSize), TextColor = NVTheme.Current.Accent, MinimumHeightRequest = NVTokens.MinTap, MinimumWidthRequest = NVTokens.MinTap };
             var tap = new TapGestureRecognizer();
             tap.Tapped += (_, _) => Value = star;
             label.GestureRecognizers.Add(tap);

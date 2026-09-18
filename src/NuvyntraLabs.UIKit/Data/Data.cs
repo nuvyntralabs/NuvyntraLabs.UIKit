@@ -320,7 +320,7 @@ public class NVTreeView : ThemeAwareView
                 Title = node.Title,
                 Subtitle = node.Children.Count == 0 ? "" : $"{node.Children.Count} child(ren)",
                 Kind = node.IsExpanded ? NVIconKind.ChevronDown : NVIconKind.ChevronRight,
-                Margin = new Thickness(depth * NVTokens.Space4, 0, 0, 0)
+                Margin = NVTokens.StartPad(depth * NVTokens.Space4)
             };
             var tap = new TapGestureRecognizer();
             tap.Tapped += (_, _) => Toggle(node);

@@ -144,7 +144,10 @@ public class NVTextField : ThemeAwareView
         _label.Text = Label;
         _label.IsVisible = !string.IsNullOrWhiteSpace(Label);
         _label.TextColor = theme.Muted;
+        _label.FontSize = NVTokens.Type(NVTokens.LabelSize);
         _entry.TextColor = theme.Ink;
+        _entry.FontSize = NVTokens.Type(NVTokens.BodySize);
+        _entry.MinimumHeightRequest = NVTokens.MinTap;
         _entry.PlaceholderColor = theme.Fog;
         _entry.Placeholder = Placeholder;
         _entry.IsPassword = IsPassword;
@@ -158,6 +161,7 @@ public class NVTextField : ThemeAwareView
         _chrome.StrokeShape = new RoundRectangle { CornerRadius = NVTokens.RadiusSmall };
         _hint.Text = error ? Error : Helper;
         _hint.TextColor = error ? theme.Danger : theme.Muted;
+        _hint.FontSize = NVTokens.Type(NVTokens.CaptionSize);
         _hint.IsVisible = !string.IsNullOrWhiteSpace(_hint.Text);
     }
 }

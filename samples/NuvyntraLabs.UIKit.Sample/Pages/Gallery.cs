@@ -74,8 +74,34 @@ public abstract class CatalogSectionPage : ContentPage
             Command = new Command(() =>
                 NVTheme.Current.SetMode(NVTheme.Current.IsDark ? NVThemeMode.Light : NVThemeMode.Dark))
         });
+        ToolbarItems.Add(new ToolbarItem
+        {
+            Text = "RTL",
+            Command = new Command(() =>
+                NVTheme.Current.SetFlowDirection(
+                    NVTheme.Current.IsRtl ? FlowDirection.LeftToRight : FlowDirection.RightToLeft))
+        });
+        ToolbarItems.Add(new ToolbarItem
+        {
+            Text = "Type",
+            Command = new Command(() =>
+            {
+                var next = NVTheme.Current.TypeScale switch
+                {
+                    < 1 => 1,
+                    < 2 => 2,
+                    _ => 0.8
+                };
+                NVTheme.Current.SetTypeScale(next);
+            })
+        });
         Content = Gallery.Page(title, intro, build());
-        NVTheme.Current.Changed += (_, _) => BackgroundColor = NVTheme.Current.Paper;
+        NVTheme.Current.Changed += (_, _) =>
+        {
+            FlowDirection = NVTheme.Current.FlowDirection;
+            BackgroundColor = NVTheme.Current.Paper;
+        };
+        FlowDirection = NVTheme.Current.FlowDirection;
         BackgroundColor = NVTheme.Current.Paper;
     }
 }

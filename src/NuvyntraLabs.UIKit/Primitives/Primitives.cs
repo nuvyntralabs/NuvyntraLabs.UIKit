@@ -64,8 +64,9 @@ public class NVIcon : ThemeAwareView
 
     protected override void ApplyTheme()
     {
-        _glyph.Text = NVIcons.Glyph(Kind);
+        _glyph.Text = NVIcons.Glyph(Kind, NVTheme.Current.FlowDirection);
         _glyph.TextColor = NVTheme.Current.Ink;
+        _glyph.FontSize = NVTokens.Type(18);
     }
 }
 
@@ -163,7 +164,7 @@ public class NVBadge : ThemeAwareView
         _label.Text = Dot ? "●" : Text;
         _label.TextColor = theme.OnAccent;
         _label.BackgroundColor = theme.Accent;
-        _label.FontSize = NVTokens.CaptionSize;
+        _label.FontSize = NVTokens.Type(NVTokens.CaptionSize);
         _label.FontFamily = NVTokens.FontSemiBold;
     }
 }

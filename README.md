@@ -134,7 +134,9 @@ dotnet build samples/NuvyntraLabs.UIKit.Sample/NuvyntraLabs.UIKit.Sample.csproj 
 dotnet pack src/NuvyntraLabs.UIKit/NuvyntraLabs.UIKit.csproj -c Release -o artifacts
 ```
 
-The `.nupkg` is written to `artifacts/NuvyntraLabs.UIKit.1.5.0.nupkg`. Publishing to nuget.org and GitHub Packages is pipeline-only.
+The `.nupkg` is written to `artifacts/NuvyntraLabs.UIKit.1.5.1.nupkg`. Publishing to nuget.org and GitHub Packages is pipeline-only.
+
+`1.5.1` is additive. Hosts that pin `1.5.0` (Lumina Playground) keep compiling. Opt in with `NVTheme.Current.SetTypeScale(0.8|1|2)` and `SetFlowDirection`. Overlay pages can call `TryHandleKey("Escape")` / `NVCommandPalette.TryHandleShortcut("Control+K")`. Walk the sample on Windows and Mac Catalyst — those TFMs were already in the kit.
 
 ## Platform support
 

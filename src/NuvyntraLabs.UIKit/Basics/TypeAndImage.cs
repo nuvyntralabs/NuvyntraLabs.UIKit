@@ -16,10 +16,10 @@ public class NVHeading : ThemeAwareView
         _label.FontFamily = Role is NVTextRole.Caption or NVTextRole.Body ? NVTokens.FontRegular : NVTokens.FontSemiBold;
         _label.FontSize = Role switch
         {
-            NVTextRole.Display => NVTokens.DisplaySize,
-            NVTextRole.Body => NVTokens.BodySize,
-            NVTextRole.Caption => NVTokens.CaptionSize,
-            _ => NVTokens.TitleSize
+            NVTextRole.Display => NVTokens.Type(NVTokens.DisplaySize),
+            NVTextRole.Body => NVTokens.Type(NVTokens.BodySize),
+            NVTextRole.Caption => NVTokens.Type(NVTokens.CaptionSize),
+            _ => NVTokens.Type(NVTokens.TitleSize)
         };
     }
 }
@@ -58,6 +58,7 @@ public class NVImage : ThemeAwareView
         }
         _caption.Text = string.IsNullOrWhiteSpace(Caption) ? (Source is null ? "Image placeholder" : "") : Caption;
         _caption.TextColor = NVTheme.Current.Muted;
+        _caption.FontSize = NVTokens.Type(NVTokens.CaptionSize);
         _caption.IsVisible = !string.IsNullOrWhiteSpace(_caption.Text);
     }
 }

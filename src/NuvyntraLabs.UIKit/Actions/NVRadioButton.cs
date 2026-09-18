@@ -81,6 +81,7 @@ public class NVRadioButton : ThemeAwareView
     {
         var theme = NVTheme.Current;
         _radio.TextColor = theme.Ink;
+        _radio.FontSize = NVTokens.Type(NVTokens.BodySize);
         _radio.Content = Text;
         _radio.GroupName = GroupName;
         _radio.IsChecked = IsChecked;

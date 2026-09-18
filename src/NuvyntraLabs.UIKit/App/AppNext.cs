@@ -31,6 +31,24 @@ public class NVCommandPalette : OverlayHost
     public IList<NVCommandItem> Recents { get => (IList<NVCommandItem>)GetValue(RecentsProperty); set => SetValue(RecentsProperty, value); }
     public IReadOnlyList<NVCommandItem> VisibleCommands { get; private set; } = [];
 
+    public static bool MatchesOpenShortcut(string key)
+    {
+        var normalized = key.Replace(" ", "", StringComparison.Ordinal).ToLowerInvariant();
+        return normalized is "control+k" or "ctrl+k" or "cmd+k" or "command+k" or "meta+k";
+    }
+
+    /// <summary>Ctrl/Cmd+K toggles the palette. Escape uses <see cref="OverlayHost.TryHandleKey"/>.</summary>
+    public bool TryHandleShortcut(string key)
+    {
+        if (MatchesOpenShortcut(key))
+        {
+            IsOpen = !IsOpen;
+            return true;
+        }
+
+        return TryHandleKey(key);
+    }
+
     public static IReadOnlyList<NVCommandItem> Filter(IEnumerable<NVCommandItem>? commands, IEnumerable<NVCommandItem>? recents, string? query)
     {
         if (string.IsNullOrWhiteSpace(query))
@@ -317,6 +335,7 @@ public class NVPaywall : OverlayHost
     protected override void ApplyTheme()
     {
         DismissOnScrim = !IsBlocking;
+        DismissOnEscape = !IsBlocking;
         base.ApplyTheme();
         _title.Text = Title;
         _body.Text = Message;

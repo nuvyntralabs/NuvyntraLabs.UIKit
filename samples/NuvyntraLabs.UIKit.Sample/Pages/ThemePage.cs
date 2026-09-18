@@ -63,9 +63,37 @@ public sealed class ThemePage : CatalogSectionPage
                     new NVTextField { Label = "Error", Error = "Required" }
                 }
             });
-        yield return Gallery.Sample(8, "NVAccessibility", "NV-FND-08  ·  Body contrast on paper",
-            new NVCaptionText { Text = NVAccessibility.BodyContrastOk(NVTheme.Current.Ink, NVTheme.Current.Paper) ? "Pass ≥ 4.5:1" : "Fail" });
+        yield return Gallery.Sample(8, "NVAccessibility", "NV-FND-08  ·  Body contrast on paper / muted / danger / warn / ok",
+            new NVCaptionText
+            {
+                Text = string.Join("  ·  ",
+                    ContrastLine("ink", NVTheme.Current.Ink),
+                    ContrastLine("muted", NVTheme.Current.Muted),
+                    ContrastLine("danger", NVTheme.Current.Danger),
+                    ContrastLine("warn", NVTheme.Current.Warn),
+                    ContrastLine("ok", NVTheme.Current.Ok),
+                    ContrastLine("onAccent", NVTheme.Current.OnAccent, NVTheme.Current.Accent))
+            });
+        var scale80 = new NVButton { Text = "80%", Variant = NVButtonVariant.Outline };
+        var scale100 = new NVButton { Text = "100%", Variant = NVButtonVariant.Tonal };
+        var scale200 = new NVButton { Text = "200%", Variant = NVButtonVariant.Outline };
+        scale80.Command = new Command(() => NVTheme.Current.SetTypeScale(0.8));
+        scale100.Command = new Command(() => NVTheme.Current.SetTypeScale(1));
+        scale200.Command = new Command(() => NVTheme.Current.SetTypeScale(2));
+        yield return Gallery.Sample(9, "NVTokens", "TypeScale 80–200%. Toolbar Type cycles the same values.",
+            new HorizontalStackLayout { Spacing = NVTokens.Space2, Children = { scale80, scale100, scale200 } });
+        var ltr = new NVButton { Text = "LTR", Variant = NVButtonVariant.Outline };
+        var rtl = new NVButton { Text = "RTL", Variant = NVButtonVariant.Outline };
+        ltr.Command = new Command(() => NVTheme.Current.SetFlowDirection(FlowDirection.LeftToRight));
+        rtl.Command = new Command(() => NVTheme.Current.SetFlowDirection(FlowDirection.RightToLeft));
+        yield return Gallery.Sample(10, "NVTheme", "FlowDirection. Default MatchParent — playground hosts stay LTR until they set this.",
+            new HorizontalStackLayout { Spacing = NVTokens.Space2, Children = { ltr, rtl } });
+        yield return Gallery.Sample(11, "NVCommandPalette", "Windows / Catalyst: host calls TryHandleShortcut(\"Control+K\") or Escape.",
+            new NVCaptionText { Text = "OverlayHost.TryHandleKey / NVCommandPalette.TryHandleShortcut — no new catalog type." });
     }
+
+    static string ContrastLine(string name, Color text, Color? background = null) =>
+        $"{name} {(NVAccessibility.BodyContrastOk(text, background ?? NVTheme.Current.Paper) ? "pass" : "fail")}";
 
     static View SwatchRow()
     {

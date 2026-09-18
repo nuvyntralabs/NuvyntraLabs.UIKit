@@ -10,6 +10,9 @@ public class OverlayHost : ThemeAwareView
     public static readonly BindableProperty DismissOnScrimProperty = BindableProperty.Create(
         nameof(DismissOnScrim), typeof(bool), typeof(OverlayHost), true);
 
+    public static readonly BindableProperty DismissOnEscapeProperty = BindableProperty.Create(
+        nameof(DismissOnEscape), typeof(bool), typeof(OverlayHost), true);
+
     public static readonly BindableProperty PlacementProperty = BindableProperty.Create(
         nameof(Placement), typeof(OverlayPlacement), typeof(OverlayHost), OverlayPlacement.Center,
         propertyChanged: OnOpen);
@@ -56,6 +59,38 @@ public class OverlayHost : ThemeAwareView
         set => SetValue(DismissOnScrimProperty, value);
     }
 
+    public bool DismissOnEscape
+    {
+        get => (bool)GetValue(DismissOnEscapeProperty);
+        set => SetValue(DismissOnEscapeProperty, value);
+    }
+
+    /// <summary>Host pages call this from a window key handler. Escape dismisses when <see cref="DismissOnEscape"/>.</summary>
+    public bool TryHandleKey(string key)
+    {
+        if (!IsOpen || !DismissOnEscape || !IsEscape(key))
+        {
+            return false;
+        }
+
+        IsOpen = false;
+        return true;
+    }
+
+    public bool FocusPanel()
+    {
+        if (!IsOpen)
+        {
+            return false;
+        }
+
+        return _panel.Focus() || (PanelContent as VisualElement)?.Focus() == true;
+    }
+
+    static bool IsEscape(string key) =>
+        key.Equals("Escape", StringComparison.OrdinalIgnoreCase)
+        || key.Equals("Esc", StringComparison.OrdinalIgnoreCase);
+
     public OverlayPlacement Placement
     {
         get => (OverlayPlacement)GetValue(PlacementProperty);
@@ -68,6 +103,10 @@ public class OverlayHost : ThemeAwareView
         {
             host.IsVisible = host.IsOpen;
             host.ApplyPlacement();
+            if (host.IsOpen)
+            {
+                host.FocusPanel();
+            }
         }
     }
 

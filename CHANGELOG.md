@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.5.1
+
+- Phase 7 harden (no new catalog names). Playground apps that pin `1.5.0` keep compiling; opt in with `NVTheme.Current.SetTypeScale` / `SetFlowDirection`.
+- `NVTheme.TypeScale` (0.8–2.0) scales type roles. `NVTokens.Type` / `MinTap` (never below 44 at 80%).
+- `NVTheme.FlowDirection` default `MatchParent`. RTL flips start padding, carousel swipe, and chevron glyphs.
+- Contrast: light Warn/Ok darkened; `OnAccent` / `On(fill)` pick ink or paper when white fails 4.5:1.
+- `OverlayHost.TryHandleKey` (Escape) and `NVCommandPalette.TryHandleShortcut` (Ctrl/Cmd+K). Blocking paywall ignores Escape.
+- Gallery: Theme / RTL / Type toolbar. Theme page shows contrast pairs and scale / direction buttons.
+- Coverlet collector on the test project. Walk the sample on Windows and Mac Catalyst (TFMs already shipped).
+
 ## 1.5.0
 
 - Rename `NVEmailField` → `NVInputField`. The type is a generic labeled input; set `Label` / `Placeholder` for email or any other field. Breaking if you referenced `NVEmailField`.

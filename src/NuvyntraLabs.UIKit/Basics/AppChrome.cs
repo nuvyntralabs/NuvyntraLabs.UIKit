@@ -11,6 +11,7 @@ public class NVSectionHeader : ThemeAwareView
     {
         _label.Text = Text.ToUpperInvariant();
         _label.TextColor = NVTheme.Current.Muted;
+        _label.FontSize = NVTokens.Type(NVTokens.LabelSize);
     }
 }
 
@@ -110,6 +111,8 @@ public class NVAppScaffold : ThemeAwareView
     {
         _bar.Title = Title;
         _fab.IsVisible = ShowFab;
+        _fab.HorizontalOptions = LayoutOptions.End;
+        _fab.Margin = NVTokens.StartPad(0, 0, NVTokens.Space4, NVTokens.Space4);
     }
 }
 

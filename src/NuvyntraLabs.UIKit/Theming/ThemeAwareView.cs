@@ -6,9 +6,14 @@ public abstract class ThemeAwareView : ContentView
     {
         NVTheme.Current.Changed += OnThemeChanged;
         Unloaded += (_, _) => NVTheme.Current.Changed -= OnThemeChanged;
+        FlowDirection = NVTheme.Current.FlowDirection;
     }
 
-    void OnThemeChanged(object? sender, EventArgs e) => ApplyTheme();
+    void OnThemeChanged(object? sender, EventArgs e)
+    {
+        FlowDirection = NVTheme.Current.FlowDirection;
+        ApplyTheme();
+    }
 
     protected abstract void ApplyTheme();
 }

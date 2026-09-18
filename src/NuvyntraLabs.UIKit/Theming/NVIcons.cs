@@ -40,6 +40,16 @@ public enum NVIconKind
 /// <summary>Maps <see cref="NVIconKind"/> to a compact glyph. Lucide-like, not a vendor font.</summary>
 public static class NVIcons
 {
+    public static string Glyph(NVIconKind kind, FlowDirection direction)
+    {
+        if (direction == FlowDirection.RightToLeft && kind == NVIconKind.ChevronRight)
+        {
+            return "◂";
+        }
+
+        return Glyph(kind);
+    }
+
     public static string Glyph(NVIconKind kind) =>
         kind switch
         {

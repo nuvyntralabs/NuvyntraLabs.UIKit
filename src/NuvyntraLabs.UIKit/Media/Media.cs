@@ -302,7 +302,7 @@ sealed class NVMapDrawable : IDrawable
         canvas.FillColor = NVTheme.Current.Accent;
         canvas.FillCircle(pin, 8);
         canvas.FillColor = NVTheme.Current.Ink;
-        canvas.FontSize = 12;
+        canvas.FontSize = (float)NVTokens.Type(12);
         canvas.DrawString(Place, dirty.X, dirty.Bottom - 22, dirty.Width, 18, HorizontalAlignment.Center, VerticalAlignment.Center);
     }
 }

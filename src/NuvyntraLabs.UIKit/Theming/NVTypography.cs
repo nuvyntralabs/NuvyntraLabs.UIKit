@@ -14,7 +14,7 @@ public static class NVTypography
         new()
         {
             Text = text,
-            FontSize = size,
+            FontSize = NVTokens.Type(size),
             FontFamily = font,
             TextColor = NVTheme.Current.Ink
         };
